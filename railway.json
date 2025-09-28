@@ -5,7 +5,7 @@
     "buildCommand": "npm run build:all"
   },
   "deploy": {
-    "startCommand": "npm run start:gateway",
+    "startCommand": "npm run start",
     "restartPolicyType": "ON_FAILURE"
   }
 }
