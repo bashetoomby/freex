@@ -20,7 +20,7 @@ async function start() {
     .addTag("Freex")
     .build()
   const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('/api/docs', app, document)
+  SwaggerModule.setup('/backend/docs', app, document)
   app.use(cookieParser(process.env.COOKIE_SECRET))
   app.enableCors({
     credentials: true,

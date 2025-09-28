@@ -23,33 +23,45 @@ export const SocketProvider = ({ children, session }: SocketProviderProps) => {
   useEffect(() => {
     if (!session?.isAuth) return;
 
-    const newSocket = io(process.env.NEXT_PUBLIC_API_URL || '', {
+    // Используем прямой URL к бэкенду
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8081';
+    
+    const newSocket = io(backendUrl, {
       auth: {
         token: session.token
       },
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
-      autoConnect: true
+      autoConnect: true,
+      transports: ['websocket', 'polling'] // важно для Railway
     });
 
     const onConnect = () => {
+      console.log('Connected to backend WebSocket');
       setIsConnected(true);
       newSocket.emit('joinRoom', { room: 'room/' + session.userdata.id });
     };
 
     const onDisconnect = () => {
+      console.log('Disconnected from backend WebSocket');
       setIsConnected(false);
+    };
+
+    const onError = (error: any) => {
+      console.error('WebSocket error:', error);
     };
 
     newSocket.on('connect', onConnect);
     newSocket.on('disconnect', onDisconnect);
+    newSocket.on('error', onError);
 
     setSocket(newSocket);
 
     return () => {
       newSocket.off('connect', onConnect);
       newSocket.off('disconnect', onDisconnect);
+      newSocket.off('error', onError);
       newSocket.close();
       setSocket(null);
     };
