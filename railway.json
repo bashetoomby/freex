@@ -4,7 +4,7 @@
     "buildCommand": "npm run build:all"
   },
   "deploy": {
-    "startCommand": "npm run start:prod",
+    "startCommand": "npm run start",
     "restartPolicyType": "ON_FAILURE"
   }
 }

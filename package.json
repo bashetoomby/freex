@@ -1,6 +1,18 @@
 {
-  "scripts": {
-    "build:all": "npm run build --workspace=apps/frontend && npm run build --workspace=apps/backend",
-    "start:prod": "concurrently \"npm run start:prod --workspace=apps/backend\" \"npm run start:prod --workspace=apps/frontend\""
-  }
+    "name": "your-project",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "apps/*"
+    ],
+    "scripts": {
+        "build": "npm run build --workspace=apps/frontend && npm run build --workspace=apps/backend",
+        "build:all": "npm run build --workspace=apps/frontend && npm run build --workspace=apps/backend",
+        "dev": "concurrently \"npm run dev --workspace=apps/backend\" \"npm run dev --workspace=apps/frontend\"",
+        "start": "concurrently \"npm run start:prod --workspace=apps/backend\" \"npm run start:prod --workspace=apps/frontend\"",
+        "install:all": "npm install"
+    },
+    "devDependencies": {
+        "concurrently": "^7.6.0"
+    }
 }
