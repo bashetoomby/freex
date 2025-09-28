@@ -8,29 +8,27 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', service: 'gateway' });
 });
 
+// API routes proxy to Nest.js
 app.use('/api', createProxyMiddleware({
   target: 'http://localhost:3001',
   changeOrigin: true,
-  pathRewrite: {
-    '^/api': '/api', 
-  },
-  onProxyReq: (proxyReq, req, res) => {
-    console.log('Proxying to backend:', req.method, req.url);
-  }
+  // УБЕРИТЕ pathRewrite - оставьте как есть
 }));
 
-
+// Все остальные запросы идут к Next.js
 app.use('/', createProxyMiddleware({
   target: 'http://localhost:3000',
   changeOrigin: true,
-  onProxyReq: (proxyReq, req, res) => {
-    console.log('Proxying to frontend:', req.method, req.url);
+  // Исключаем /api из этого прокси
+  pathRewrite: (path, req) => {
+    if (path.startsWith('/api')) {
+      return path; // не переписываем API пути
+    }
+    return path;
   }
 }));
 
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Gateway server running on port ${PORT}`);
-  console.log(`Proxying /api/* to http://localhost:3001`);
-  console.log(`Proxying /* to http://localhost:3000`);
 });
