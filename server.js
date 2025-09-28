@@ -3,6 +3,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const { spawn } = require('child_process');
 
 const app = express();
+const server = http.createServer(app);
 const FRONTEND_PORT = process.env.PORT || 8080;
 const BACKEND_PORT = 8081;
 const FRONTEND_DEV_PORT = 3000;
