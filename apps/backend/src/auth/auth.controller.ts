@@ -18,13 +18,11 @@ export class AuthController {
     async login(@Res({ passthrough: true }) response: Response, @Body() userDto: CreateUserDto) {
         const tokens = await this.authService.login(userDto)
 
-        response.setHeader('Access-Control-Allow-Credentials', 'true');
-        response.setHeader('Access-Control-Allow-Origin', 'https://freex-frontend.vercel.app');
         
         response.cookie('refreshToken', tokens.refreshToken, {
             maxAge: 24 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: 'strict',
             secure: true,
             domain: '.railway.app'
         })
@@ -39,13 +37,11 @@ export class AuthController {
     async registration(@Res({ passthrough: true }) response: Response, @Body() userDto: CreateUserDto) {
         const tokens = await this.authService.registration(userDto)
 
-        response.setHeader('Access-Control-Allow-Credentials', 'true');
-        response.setHeader('Access-Control-Allow-Origin', 'https://freex-frontend.vercel.app');
 
         response.cookie('refreshToken', tokens.refreshToken, {
             maxAge: 24 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: 'strict',
             secure: true,
             domain: '.railway.app'
         })
@@ -59,12 +55,9 @@ export class AuthController {
     async logout(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
         const { refreshToken } = request.cookies
 
-        response.setHeader('Access-Control-Allow-Credentials', 'true');
-        response.setHeader('Access-Control-Allow-Origin', 'https://freex-frontend.vercel.app');
-
         response.clearCookie('refreshToken', {
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: 'strict',
             secure: true,
             domain: '.railway.app'
         })
@@ -78,13 +71,10 @@ export class AuthController {
 
         const tokens = await this.authService.refreshToken(request.cookies.refreshToken)
 
-        response.setHeader('Access-Control-Allow-Credentials', 'true');
-        response.setHeader('Access-Control-Allow-Origin', 'https://freex-frontend.vercel.app');
-
         response.cookie('refreshToken', tokens.refreshToken, {
             maxAge: 24 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: 'strict',
             secure: true,
             domain: '.railway.app'
         })
