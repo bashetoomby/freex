@@ -32,6 +32,12 @@ setTimeout(() => {
     target: `http://localhost:${BACKEND_PORT}`,
     changeOrigin: true,
   }));
+  app.use('/backend/socket.io', createProxyMiddleware({
+    target: `http://localhost:${BACKEND_PORT}`,
+    changeOrigin: true,
+    ws: true, // важно для WebSocket
+    logLevel: 'debug'
+  }));
 
   // Прокси для всего остального к Next.js
   app.use('*', createProxyMiddleware({

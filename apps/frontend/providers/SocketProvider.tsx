@@ -7,6 +7,7 @@ import { io, Socket } from 'socket.io-client';
 interface SocketContextType {
   socket: Socket | null;
   isConnected: boolean;
+  connectionError: string | null;
 }
 
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
@@ -19,14 +20,31 @@ interface SocketProviderProps {
 export const SocketProvider = ({ children, session }: SocketProviderProps) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!session?.isAuth) return;
+    if (!session?.isAuth) {
+      console.log('No auth session, skipping socket connection');
+      return;
+    }
 
-    // Используем прямой URL к бэкенду
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8081';
-    
-    const newSocket = io(backendUrl, {
+    // Определяем URL для WebSocket
+    const getWebSocketUrl = () => {
+      if (typeof window !== 'undefined') {
+        // В продакшене используем тот же домен с путем /backend
+        if (process.env.NODE_ENV === 'production') {
+          return window.location.origin;
+        }
+        // В разработке localhost
+        return 'http://localhost:8080';
+      }
+      return 'http://localhost:8080';
+    };
+
+    const websocketUrl = getWebSocketUrl();
+    console.log('🔌 Connecting to WebSocket:', websocketUrl);
+
+    const newSocket = io(websocketUrl, {
       auth: {
         token: session.token
       },
@@ -34,41 +52,48 @@ export const SocketProvider = ({ children, session }: SocketProviderProps) => {
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
       autoConnect: true,
-      transports: ['websocket', 'polling'] // важно для Railway
+      transports: ['websocket', 'polling'],
+      timeout: 10000,
+      path: '/backend/socket.io'
     });
 
     const onConnect = () => {
-      console.log('Connected to backend WebSocket');
+      console.log('✅ SUCCESS: Connected to backend WebSocket');
       setIsConnected(true);
+      setConnectionError(null);
       newSocket.emit('joinRoom', { room: 'room/' + session.userdata.id });
     };
 
-    const onDisconnect = () => {
-      console.log('Disconnected from backend WebSocket');
+    const onDisconnect = (reason: string) => {
+      console.log('❌ DISCONNECTED from WebSocket:', reason);
       setIsConnected(false);
+      setConnectionError(`Disconnected: ${reason}`);
     };
 
-    const onError = (error: any) => {
-      console.error('WebSocket error:', error);
+    const onConnectError = (error: Error) => {
+      console.error('❌ WebSocket connection error:', error);
+      setConnectionError(`Connection error: ${error.message}`);
     };
 
     newSocket.on('connect', onConnect);
     newSocket.on('disconnect', onDisconnect);
-    newSocket.on('error', onError);
+    newSocket.on('connect_error', onConnectError);
 
     setSocket(newSocket);
 
     return () => {
+      console.log('Cleaning up socket connection');
       newSocket.off('connect', onConnect);
       newSocket.off('disconnect', onDisconnect);
-      newSocket.off('error', onError);
+      newSocket.off('connect_error', onConnectError);
       newSocket.close();
       setSocket(null);
+      setIsConnected(false);
     };
   }, [session?.token, session?.userdata?.id, session?.isAuth]);
 
   return (
-    <SocketContext.Provider value={{ socket, isConnected }}>
+    <SocketContext.Provider value={{ socket, isConnected, connectionError }}>
       {children}
     </SocketContext.Provider>
   );

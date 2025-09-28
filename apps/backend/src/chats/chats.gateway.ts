@@ -14,6 +14,8 @@ import { MessagesService } from 'src/messages/messages.service';
     cors: {
         origin: '*',
     },
+    transports: ['websocket', 'polling'],
+    path: '/socket.io'
 })
 @Injectable()
 export class ChatsGateway {
