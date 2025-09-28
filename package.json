@@ -2,18 +2,16 @@
   "name": "your-project",
   "version": "1.0.0",
   "scripts": {
+    "install:all": "cd apps/backend && npm install && cd ../frontend && npm install",
     "build:frontend": "cd apps/frontend && npm run build",
     "build:backend": "cd apps/backend && npm run build",
-    "build:all": "npm run build:backend && npm run build:frontend",
+    "build:all": "npm run install:all && npm run build:backend && npm run build:frontend",
     "start:frontend": "cd apps/frontend && npm start",
     "start:backend": "cd apps/backend && npm run start:prod",
-    "start:gateway": "node server.js",
-    "start": "npm run build:all && npm run start:gateway",
-    "dev": "concurrently \"cd apps/backend && npm run start:dev\" \"cd apps/frontend && npm run dev\""
+    "start": "npx concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "dev": "npx concurrently \"cd apps/backend && npm run start:dev\" \"cd apps/frontend && npm run dev\""
   },
-  "dependencies": {
-    "express": "^4.18.2",
-    "http-proxy-middleware": "^2.0.6",
+  "devDependencies": {
     "concurrently": "^8.2.2"
   }
 }
