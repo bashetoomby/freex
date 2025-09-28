@@ -12,49 +12,57 @@ console.log('Starting applications...');
 // Запускаем бэкенд (Nest.js)
 console.log('Starting Nest.js backend...');
 const backendProcess = spawn('node', ['dist/main.js'], {
-  cwd: './apps/backend',
-  stdio: 'inherit',
-  env: { ...process.env, PORT: BACKEND_PORT }
+    cwd: './apps/backend',
+    stdio: 'inherit',
+    env: { ...process.env, PORT: BACKEND_PORT }
 });
 
 // Запускаем фронтенд (Next.js)
 console.log('Starting Next.js frontend...');
 const frontendProcess = spawn('npm', ['run', 'start'], {
-  cwd: './apps/frontend',
-  stdio: 'inherit',
-  env: { ...process.env, PORT: FRONTEND_DEV_PORT }
+    cwd: './apps/frontend',
+    stdio: 'inherit',
+    env: { ...process.env, PORT: FRONTEND_DEV_PORT }
 });
 
 // Ждем запуска сервисов
 setTimeout(() => {
-  // Прокси для API к бэкенду
-  app.use('/backend', createProxyMiddleware({
-    target: `http://localhost:${BACKEND_PORT}`,
-    changeOrigin: true,
-  }));
-  app.use('/backend/socket.io', createProxyMiddleware({
-    target: `http://localhost:${BACKEND_PORT}`,
-    changeOrigin: true,
-    ws: true, // важно для WebSocket
-    logLevel: 'debug'
-  }));
+    // Прокси для API к бэкенду
+    app.use('/backend', createProxyMiddleware({
+        target: `http://localhost:${BACKEND_PORT}`,
+        changeOrigin: true,
+    }));
 
-  // Прокси для всего остального к Next.js
-  app.use('*', createProxyMiddleware({
-    target: `http://localhost:${FRONTEND_DEV_PORT}`,
-    changeOrigin: true,
-  }));
 
-  app.listen(FRONTEND_PORT, () => {
-    console.log(`Main server running on port ${FRONTEND_PORT}`);
-    console.log(`API: http://localhost:${FRONTEND_PORT}/api -> http://localhost:${BACKEND_PORT}/api`);
-    console.log(`Frontend: http://localhost:${FRONTEND_PORT} -> http://localhost:${FRONTEND_DEV_PORT}`);
-  });
+    // Специальный прокси для WebSocket
+    const wsProxy = createProxyMiddleware('/backend/socket.io', {
+        target: `http://localhost:${BACKEND_PORT}`,
+        changeOrigin: true,
+        ws: true,
+        logLevel: 'debug'
+    });
+
+    app.use(wsProxy);
+
+    // Обработка upgrade для WebSocket
+    server.on('upgrade', wsProxy.upgrade);
+
+    // Прокси для всего остального к Next.js
+    app.use('*', createProxyMiddleware({
+        target: `http://localhost:${FRONTEND_DEV_PORT}`,
+        changeOrigin: true,
+    }));
+
+    app.listen(FRONTEND_PORT, () => {
+        console.log(`Main server running on port ${FRONTEND_PORT}`);
+        console.log(`API: http://localhost:${FRONTEND_PORT}/api -> http://localhost:${BACKEND_PORT}/api`);
+        console.log(`Frontend: http://localhost:${FRONTEND_PORT} -> http://localhost:${FRONTEND_DEV_PORT}`);
+    });
 }, 5000);
 
 process.on('SIGTERM', () => {
-  console.log('Shutting down...');
-  backendProcess.kill();
-  frontendProcess.kill();
-  process.exit(0);
+    console.log('Shutting down...');
+    backendProcess.kill();
+    frontendProcess.kill();
+    process.exit(0);
 });
