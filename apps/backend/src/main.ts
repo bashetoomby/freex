@@ -4,7 +4,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 
 const cookieParser = require('cookie-parser')
 async function start() {
-  const PORT = process.env.PORT || 3001
+  const PORT = process.env.BACKEND_PORT || 3001
   console.log(PORT);
   const app = await NestFactory.create(AppModule)
 
