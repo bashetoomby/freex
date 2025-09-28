@@ -69,12 +69,12 @@ const Registration = () => {
                     autoComplete='off'
                     onChange={clearErrors}
                     className='registration__form'
-                    action={async (formData) => {
+                    action={async (formData):Promise<void> => {
 
                         if (String(formData.get('password')) !== String(formData.get('reapeat-password'))) {
                             setFormErr([...formErr, 'Password mismatch'])
                             setRepeatPassErr(true)
-                            return null
+                            return 
                         }
 
                         const user = {
