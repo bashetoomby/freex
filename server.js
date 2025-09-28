@@ -1,55 +1,54 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const next = require('next');
+const { spawn } = require('child_process');
 
-const dev = process.env.NODE_ENV !== 'production';
-const nextApp = next({ 
-  dev, 
-  dir: './apps/frontend' 
-});
-const nextHandler = nextApp.getRequestHandler();
-
-// Порты
+const app = express();
 const FRONTEND_PORT = process.env.PORT || 8080;
 const BACKEND_PORT = 8081;
+const FRONTEND_DEV_PORT = 3000;
 
-async function startServer() {
-  try {
-    // Подготавливаем Next.js
-    await nextApp.prepare();
+console.log('Starting applications...');
 
-    const app = express();
-
-    // Прокси для API запросов к Nest.js
-    app.use('/api', createProxyMiddleware({
-      target: `http://localhost:${BACKEND_PORT}`,
-      changeOrigin: true,
-      pathRewrite: {
-        '^/api': '/api', // сохраняем /api префикс
-      },
-    }));
-
-    // Все остальные запросы к Next.js
-    app.get('*', (req, res) => {
-      return nextHandler(req, res);
-    });
-
-    // Запускаем сервер
-    app.listen(FRONTEND_PORT, (err) => {
-      if (err) throw err;
-      console.log(`> Frontend ready on http://localhost:${FRONTEND_PORT}`);
-    });
-
-  } catch (err) {
-    console.error('Error starting server:', err);
-    process.exit(1);
-  }
-}
-
-// Запускаем бэкенд и фронтенд
-startServer();
-
-// В этом же процессе запускаем Nest.js (простая версия)
-require('child_process').fork('./apps/backend/dist/main.js', {
+// Запускаем бэкенд (Nest.js)
+console.log('Starting Nest.js backend...');
+const backendProcess = spawn('node', ['dist/main.js'], {
+  cwd: './apps/backend',
+  stdio: 'inherit',
   env: { ...process.env, PORT: BACKEND_PORT }
+});
+
+// Запускаем фронтенд (Next.js)
+console.log('Starting Next.js frontend...');
+const frontendProcess = spawn('npm', ['run', 'start'], {
+  cwd: './apps/frontend',
+  stdio: 'inherit',
+  env: { ...process.env, PORT: FRONTEND_DEV_PORT }
+});
+
+// Ждем запуска сервисов
+setTimeout(() => {
+  // Прокси для API к бэкенду
+  app.use('/api', createProxyMiddleware({
+    target: `http://localhost:${BACKEND_PORT}`,
+    changeOrigin: true,
+  }));
+
+  // Прокси для всего остального к Next.js
+  app.use('*', createProxyMiddleware({
+    target: `http://localhost:${FRONTEND_DEV_PORT}`,
+    changeOrigin: true,
+  }));
+
+  app.listen(FRONTEND_PORT, () => {
+    console.log(`Main server running on port ${FRONTEND_PORT}`);
+    console.log(`API: http://localhost:${FRONTEND_PORT}/api -> http://localhost:${BACKEND_PORT}/api`);
+    console.log(`Frontend: http://localhost:${FRONTEND_PORT} -> http://localhost:${FRONTEND_DEV_PORT}`);
+  });
+}, 5000);
+
+process.on('SIGTERM', () => {
+  console.log('Shutting down...');
+  backendProcess.kill();
+  frontendProcess.kill();
+  process.exit(0);
 });
