@@ -1,0 +1,22 @@
+.spin-wrapper {
+    position: relative;
+    height: 100%;
+}
+
+.card-wrapper {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    transition: all .3s;
+}
+
+.card-wrapper-front {
+    position: relative;
+}
+.spin-stub{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

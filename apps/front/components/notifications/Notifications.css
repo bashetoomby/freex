@@ -1,0 +1,57 @@
+.notification {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -100%);
+    max-width: 420px;
+    min-width: 280px;
+    line-height: 32px;
+    font-size: 24px;
+    z-index: 10;
+    background-color: var(--foreground);
+    border: 1px solid var(--additional);
+    color: var(--background);
+    border-radius: 10px;
+    padding: 30px;
+    transition: all .3s;
+    opacity: 0;
+}
+
+.notification--active {
+    top: 20px;
+    transform: translate(-50%, 0);
+    opacity: 1;
+}
+.notification__delete-btn{
+    background-color: unset;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    height: 30px;
+    width: 30px;
+    padding: 5px;
+}
+.notification__delete-svg{
+    width: 100%;
+    height: 100%;
+    fill: var(--background);
+}
+.notification__duration-strip {
+    width: 0%;
+    height: 2px;
+    background-color: var(--maincolor);
+    position: absolute;
+    bottom: 5px;
+    left: 2.5%;
+    animation:none;
+}
+
+.duration-strip--active{
+    animation: fillWidth 5s linear forwards;
+}
+
+
+@keyframes fillWidth {
+    from { width: 0%; }
+    to { width: 95%; }
+}

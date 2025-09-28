@@ -1,0 +1,113 @@
+.rangeinput {
+  grid-area: rangeinput;
+}
+
+
+.rangeinput__inputs {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.rangeinput__input {
+  background-color: unset;
+  border: 1px solid var(--foreground);
+  width: 100%;
+  text-align: center;
+}
+
+.rangeinput__title {
+  text-align: center;
+}
+
+.rangeinput__slider {
+  position: relative;
+}
+
+.rangeinput__track,
+.rangeinput__range {
+  position: absolute;
+}
+
+.rangeinput__track,
+.rangeinput__range {
+  border-radius: 3px;
+  height: 5px;
+}
+
+.rangeinput__track {
+  background-color: var(--shadowcolor);
+  width: 100%;
+  z-index: 1;
+}
+
+.rangeinput__range {
+  z-index: 2;
+  background-color: var(--foreground);
+}
+
+
+
+/* Removing the default appearance */
+.rangeinput__thumb,
+.rangeinput__thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.rangeinput__thumb {
+
+  pointer-events: none;
+  position: absolute;
+  height: 0;
+
+  outline: none;
+}
+
+.rangeinput__thumb--zindex-3 {
+  z-index: 3;
+}
+
+.rangeinput__thumb--zindex-4 {
+  z-index: 4;
+}
+
+.rangeinput__thumb--zindex-5 {
+  z-index: 5;
+}
+
+/* For Chrome browsers */
+.rangeinput__thumb::-webkit-slider-thumb {
+  background-color: var(--additional);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 18px;
+  width: 18px;
+  margin-top: 4px;
+  pointer-events: all;
+  position: relative;
+  transition: all .3s;
+}
+
+.rangeinput__thumb:hover::-webkit-slider-thumb {
+  background-color: var(--maincolor);
+}
+
+/* For Firefox browsers */
+.rangeinput__thumb::-moz-range-thumb {
+  background-color: var(--additional);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 18px;
+  width: 18px;
+  margin-top: 4px;
+  pointer-events: all;
+  position: relative;
+  transition: all .3s;
+}
+
+.rangeinput__thumb:hover::-moz-range-thumb {
+  background-color: var(--maincolor);
+}

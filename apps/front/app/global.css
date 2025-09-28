@@ -1,0 +1,142 @@
+:root {
+    --background: #dcdcdc;
+    --foreground: #000000;
+    --shadowcolor: #5c5c5c;
+    --maincolor: #8f3efa;
+    --additional: #2a04fffd;
+    --error: brown;
+    --lightbg: #d9dbff;
+    --darkbg: #cabeff;
+    --transperentgray: #3f3f3fb5;
+}
+
+[data-theme='dark'] {
+    --background: #0f001f;
+    --foreground: #ebebeb;
+    --shadowcolor: #313131;
+    --maincolor: #8f3efa;
+    --additional: #ffc23dfd;
+    --error: brown;
+    --lightbg: #1b0c35;
+    --darkbg: #120824;
+    --transperentgray: #c5c5c58f;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    background-color: var(--background);
+    color: var(--foreground);
+    height: 100%;
+}
+
+button {
+    color: var(--foreground);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
+.wrapper {
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main {
+    flex-grow: 1;
+
+}
+
+
+button {
+    white-space: nowrap;
+}
+
+.input-field {
+    position: relative;
+}
+
+.input-label {
+    font-weight: 600;
+    color: var(--shadowcolor);
+    position: absolute;
+    left: 15px;
+    top: -14px;
+    font-size: 20px;
+    transition: .2s;
+    cursor: text;
+    user-select: none;
+}
+
+.input {
+    width: 300px;
+    font-size: 24px;
+    padding: 5px;
+    background: none;
+    border-bottom: 1px dashed var(--shadowcolor);
+}
+
+.input:placeholder-shown~.input-label {
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+}
+
+.input:focus~.input-label {
+    left: 15px;
+    top: -14px;
+    transform: none;
+    font-size: 20px;
+    color: var(--maincolor);
+}
+
+
+.input:focus {
+    border-bottom: 1px dashed var(--maincolor);
+}
+
+.btn-loading {
+    animation: 1s linear 0s infinite loading;
+}
+
+@keyframes loading {
+    from {
+        border: 1px dashed gray;
+        color: gray;
+    }
+
+    50% {
+        border: 1px dashed rgb(255, 153, 0);
+        color: rgb(255, 153, 0);
+    }
+
+    to {
+        border: 1px dashed gray;
+        color: gray;
+    }
+}
+
+.btn-loaded {
+    animation: 1s linear 0s none loaded;
+}
+
+@keyframes loaded {
+    from {
+        border: 1px dashed rgb(78, 173, 0);
+        color: rgb(78, 173, 0);
+    }
+
+
+
+    to {
+        border: 1px dashed inherit;
+        color: inherit;
+    }
+}

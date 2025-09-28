@@ -1,0 +1,410 @@
+.userdata {
+    max-height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-color: var(--maincolor) #00000000;
+    scroll-behavior: smooth;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.userdata__container {
+    margin: 20px 30px;
+}
+
+.userdata__geo-btn {
+    background-color: var(--lightbg);
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    gap: 10px;
+    border: 1px dashed var(--maincolor);
+    transition: all .3s;
+}
+.userdata__geo-btn:hover {
+    color: var(--additional);
+}
+
+.geo-btn__svg {
+    width: 30px;
+    height: 30px;
+    fill: var(--additional);
+}
+
+
+/* Image Box */
+
+.image-article {
+    margin: 50px 0;
+}
+
+.image-box {
+    width: 320px;
+    height: 320px;
+    position: relative;
+}
+
+.image-box__image-wrapper {
+    background-color: var(--background);
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--maincolor);
+    border-radius: 2px;
+    transition: all .3s;
+}
+
+.image-box__image-attach {
+    cursor: pointer;
+    border: 1px dashed var(--additional);
+    background-color: var(--lightbg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    font-size: 42px;
+    text-align: center;
+    flex-direction: column;
+    gap: 20px;
+    color: var(--additional);
+}
+
+.image-attach__svg {
+    height: 100px;
+    fill: var(--maincolor);
+}
+
+
+.image-box__image {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.image-box__next-btn {
+    background-color: #ffffff2a;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    z-index: inherit;
+    transform: translateY(-50%);
+}
+
+.image-box__prev-btn {
+    background-color: #ffffff48;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    z-index: inherit;
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.image-box__arrow-svg {
+    height: 50%;
+    width: 50%;
+    fill: var(--maincolor);
+}
+
+.image__delete-btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    height: 50px;
+    width: 50px;
+    background-color: #00000065;
+}
+
+.image__delete-svg {
+    height: 26px;
+    width: 26px;
+    fill: #fff;
+}
+
+.image-article__load-btn {
+    margin-top: 20px;
+    width: 100%;
+    height: 50px;
+    font-size: 32px;
+    background-color: var(--lightbg);
+    border: 1px dashed var(--maincolor);
+    transition: all .3s;
+}
+
+.image-article__load-btn:hover {
+    color: var(--additional);
+}
+
+/* Image Box */
+
+
+
+
+/* User Data */
+
+.red-star {
+    color: red;
+
+}
+
+.userdata__form {
+    display: grid;
+    grid-template-areas:
+        "title title"
+        "input btn";
+    width: 320px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.userdata__form-title {
+    grid-area: title;
+    text-align: start;
+    font-size: 20px;
+    margin: 10px;
+}
+
+.userdata__input-field {
+    background-color: var(--lightbg);
+    position: relative;
+    width: 280px;
+    padding: 10px;
+    grid-area: input;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed var(--shadowcolor);
+    transition: all .5s ease;
+}
+
+.userdata__input-field--saved {
+    border-bottom: 1px dashed green;
+    transition: all 0s ease;
+}
+
+
+
+/* Input Button */
+
+.userdata__save-btn {
+    grid-area: btn;
+    background-color: unset;
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+
+}
+
+.userdata__save-btn:hover .save-btn__svg {
+    transition: fill .5s ease;
+    fill: var(--additional);
+}
+
+.save-btn__svg {
+    height: 100%;
+    width: 100%;
+    fill: var(--foreground);
+    transition: fill .5s ease;
+}
+
+.userdata__save-btn:disabled {
+    cursor: default;
+}
+
+.userdata__save-btn--uploading {
+    animation: 1s ease 0s infinite normal none btn-upload;
+}
+
+.userdata__save-btn--uploading .save-btn__svg {
+    animation: 1s ease 0s infinite normal none btn-upload;
+}
+
+.save-btn__svg--saved {
+    transition: fill 0s ease;
+    fill: rgba(0, 255, 0, 0.685);
+}
+
+.userdata__save-btn--saved:hover .save-btn__svg--saved {
+
+    transition: fill 0s ease;
+    fill: rgba(0, 255, 0, 0.685);
+}
+
+@keyframes btn-upload {
+    from {
+        transform: rotate(0);
+        fill: var(--shadowcolor);
+    }
+
+    to {
+        transform: rotate(180deg);
+        fill: var(--additional);
+    }
+}
+
+/* Input Button */
+
+
+
+/* Gender Input */
+
+.gender-label {
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    transition: all .5s;
+}
+
+.gender-label--disabled {
+    color: var(--shadowcolor);
+}
+
+.gender-label:hover {
+    color: var(--additional);
+}
+
+.gender-label--disabled:hover {
+    color: var(--shadowcolor);
+}
+
+.gender-label--saved {
+    color: rgba(0, 255, 0, 0.685);
+}
+
+.gender-input {
+    display: none;
+}
+
+.gender-svg {
+    height: 40px;
+    fill: var(--foreground);
+}
+
+.gender-svg--active {
+    fill: var(--maincolor);
+    animation: .3s linear 0s none gender-rotate;
+}
+
+@keyframes gender-rotate {
+    from {
+        transform: rotate(0);
+    }
+
+    33% {
+        transform: rotate(45deg);
+    }
+
+    66% {
+        transform: rotate(-45deg);
+    }
+
+    to {
+        transform: rotate(-0deg);
+    }
+}
+
+
+
+/* Gender Input */
+
+
+
+/* Userdata Input */
+
+.userdata__input {
+    width: 100%;
+    background-color: unset;
+    color: var(--foreground);
+    font-size: 24px;
+    transition: all .5s;
+}
+
+.userdata__input--saved {
+    color: rgba(0, 255, 0, 0.685);
+    transition: all 0s;
+}
+
+/* Userdata Input */
+
+
+/* Content-edit Input */
+
+.content-edit {
+    display: none;
+    position: absolute;
+}
+
+.usedrata__content-edit {
+    height: 100%;
+    width: 100%;
+}
+
+/* Content-edit Input */
+
+
+
+.userdata__save-all{
+    background-color: var(--lightbg);
+    width: 100%;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    border: 1px dashed var(--maincolor);
+}
+
+
+
+
+/* Skeleton */
+
+
+.skeleton {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.skeleton__span {
+    position: absolute;
+    width: 10%;
+    height: 100%;
+    animation: 1.5s linear 0s infinite slider-span;
+    left: 0%;
+    border-bottom: 1px dashed var(--additional);
+}
+
+@keyframes slider-span {
+    from {
+        left: 0%;
+    }
+
+    50% {
+        left: 90%;
+    }
+
+    to {
+        left: 0%;
+    }
+}
+
+/* Skeleton */
+
+
+
+/* User Data */

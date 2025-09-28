@@ -1,0 +1,37 @@
+
+.settings__container{
+    display: flex;
+    flex-direction: column;
+    
+    
+    height: 100%;
+}
+
+.settings__logout-btn{
+    font-size: 24px;
+    background-color: unset;
+    border: 1px dashed var(--lightbg);
+    padding: 10px;
+}
+
+.settings__color-theme{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    
+}
+
+.settings__color-btn{
+    background-color: unset;
+}
+.color-theme__svg{
+    fill: var(--shadowcolor);
+    width: 40px;
+    height: 40px;
+    transition: all .3s;
+}
+
+.color-theme__svg--active{
+    fill: var(--additional);
+}

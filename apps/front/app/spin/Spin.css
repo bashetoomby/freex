@@ -1,0 +1,562 @@
+.spin {
+    height: 100%;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+
+
+.spin__search-params {
+    flex-shrink: 0; /* Не сжимается */
+    flex-grow: 0;
+    overflow-y: auto;
+    overflow-x: visible;
+    scrollbar-color: var(--maincolor) #00000000;
+    scroll-behavior: auto;
+    
+    
+}
+
+
+
+.spin__slider {
+    flex: 1;
+    min-height: 0;
+    margin-top: auto; /* Прижимает к низу */
+    margin-bottom: 30px;
+    transition: all .3s;
+    opacity: 1;
+}
+
+.spin__slider--hide {
+    display: none;
+}
+
+.card {}
+
+.spin__settings-btn {
+    width: 240px;
+    margin: 10px 0;
+    border-radius: 5px;
+    padding: 10px;
+    color: var(--foreground);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-size: 20px;
+    background-color: unset;
+    border: 1px solid var(--shadowcolor);
+}
+
+.spin__settings-svg {
+    width: 25px;
+    height: 25px;
+    fill: var(--foreground);
+    transition: all .3s;
+}
+
+.spin__settings-svg--active {
+    fill: var(--additional);
+    transform: rotate(180deg);
+}
+
+
+
+
+
+
+
+
+
+/* SearchParams */
+
+.searh-p-form {
+    
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 240px;
+    color: var(--foreground);
+    margin-top: 20px;
+    opacity: 0;
+    transition: all .3s;
+}
+.searh-p-form--active{
+    opacity: 1;
+}
+.searh-p-form input {
+    color: var(--foreground);
+}
+
+.gender-wrapper {
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.gender__svg {
+    width: 25px;
+    height: 25px;
+    fill: var(--foreground);
+    transition: all .3s;
+    background-color: none;
+}
+
+.gender__svg--active {
+    fill: var(--maincolor);
+    animation: .3s linear 0s none gender-rotate;
+}
+
+@keyframes gender-rotate {
+    from {
+        transform: rotate(0);
+    }
+
+    33% {
+        transform: rotate(45deg);
+    }
+
+    66% {
+        transform: rotate(-45deg);
+    }
+
+    to {
+        transform: rotate(-0deg);
+    }
+}
+
+.gender__input {
+    display: none;
+
+}
+
+
+
+.gender__label {
+    transition: all .3s;
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 20px;
+}
+
+.gender__label:hover {
+    color: var(--additional);
+}
+
+
+.userdata__form-btn {
+    color: var(--foreground);
+    margin-top: 20px;
+    font-size: 30px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: unset;
+    border: 1px solid var(--shadowcolor);
+    transition: all .3s;
+}
+
+.userdata__form-btn--activated {
+    color: var(--maincolor);
+    background-color: var(--background);
+    border: 1px solid var(--additional);
+}
+
+
+.userdata__form-btn:disabled {
+    transition: none;
+    background-color: var(--shadowcolor);
+}
+
+.userdata__form-btn:disabled:hover {
+    border: 1px solid var(--foreground);
+    background-color: var(--shadowcolor);
+    color: var(--foreground);
+}
+
+.userdata__form-btn:hover {
+    border: 1px solid var(--maincolor);
+    background-color: var(--foreground);
+    color: var(--background);
+}
+
+.userdata__form-btn--activated:hover {
+    color: var(--maincolor);
+    background-color: #000000;
+    color: var(--maincolor);
+}
+
+.userdata__form-btn--activated:hover {
+    border: 1px solid var(--additional);
+}
+
+
+.rangeinput__title {
+    font-size: 24px;
+}
+
+.rangeinput__thumb {
+    width: 100%;
+}
+
+.rangeinput__input {
+    border-radius: 5px;
+    font-size: 20px;
+    padding: 10px;
+}
+
+.rangeinput__inputs {
+    margin: 30px 0 10px;
+    border-radius: 5px;
+}
+
+.search-p-form__distance{
+    position: relative;
+    border-bottom: 1px dashed var(--shadowcolor);
+}
+.distance__block-btn{
+    background-color: var(--darkbg);
+    opacity: 0.8;
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/*Spin Card*/
+.spin-card {
+    width: 400px;
+    height: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--shadowcolor);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-color: var(--maincolor) #00000000;
+    scroll-behavior: auto;
+    background-color: var(--lightbg);
+    transition: all .3s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.spin-card--liked {
+    border: 1px solid rgb(0, 99, 0);
+}
+
+.spin-card--disliked {
+    border: 1px solid rgb(163, 0, 0);
+}
+
+.spin-card__images {
+    min-height: 300px;
+    max-height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.spin-card__image {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.spin-card__prev-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff6c;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.spin-card__prev-svg {
+    fill: var(--foreground);
+}
+
+.spin-card__info-title {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    display: flex;
+    font-size: 24px;
+    align-items: center;
+    gap: 10px;
+    background-color: #ffffff93;
+    padding: 5px;
+    height: 50px;
+    border-radius: 10px;
+    color: var(--foreground);
+    text-shadow: 2px 2px var(--background);
+}
+
+.info-title__gender-svg {
+    height: 30px;
+    fill: var(--maincolor);
+
+}
+
+.images__point-btns {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+
+}
+
+.images__point-btn {
+
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--shadowcolor);
+    border: 1px solid #fff;
+}
+
+.images__point-btn--active {
+    background-color: var(--maincolor);
+}
+
+.images__next-photo {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: unset;
+    transition: all .3s;
+}
+
+.images__prev-photo {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: unset;
+    transition: all .3s;
+}
+
+.images__empty-title {
+    font-size: 36px;
+    color: var(--shadowcolor);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+
+.spin-card__city {
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 0;
+    border-bottom: 1px dashed var(--shadowcolor);
+}
+
+.spin-card__city-svg {
+    height: 40px;
+    width: 40px;
+    fill: var(--additional);
+}
+
+
+.spin-card__city-title {
+    font-size: 32px;
+}
+
+.spin-card__desc {
+    margin: 0 20px;
+    padding: 20px 0;
+    border-bottom: 1px dashed var(--shadowcolor);
+    font-size: 26px;
+    color: var(--maincolor);
+    margin-bottom: 20px;
+}
+
+.spin-card__desc-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--foreground);
+    margin-bottom: 10px;
+}
+
+.spin-card__btn-link {
+    margin: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed var(--shadowcolor);
+}
+
+.spin-card__chat-link {
+    height: 50px;
+    font-size: 28px;
+    width: 100%;
+    background-color: unset;
+    border: 1px dashed var(--maincolor);
+    transition: all .3s;
+}
+
+.spin-card__chat-link:hover {
+    border: 1px dashed var(--additional);
+    text-shadow: 1px 1px var(--maincolor);
+}
+
+
+
+.spin-card__vote-btns {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    justify-content: center;
+    gap: 80px;
+}
+
+.spin-card__vote-btn {
+    width: 70px;
+    height: 70px;
+    padding: 16px;
+    border-radius: 50%;
+    background-color: #ffffff75;
+    border: 3px solid var(--shadowcolor);
+}
+
+
+
+
+.vote-btn--liked {
+    border: 3px solid rgb(0, 99, 0);
+}
+
+.vote-btn--disliked {
+    border: 3px solid rgb(163, 0, 0);
+}
+
+.vote-btn__dislike-svg {
+    fill: var(--additional);
+}
+
+.vote-btn__like-svg {
+    fill: var(--maincolor);
+}
+
+
+@media (max-width:700px) {
+    .spin-card {
+        width: 350px;
+        height: 55vh;
+    }
+}
+
+@media (max-width:500px) {
+    .spin-card {
+        width: 300px;
+        height: 50vh;
+    }
+}
+
+/*Spin Card*/
+
+
+
+
+/*Last Spin Card*/
+
+.spin-card__subtitle {
+    font-size: 36px;
+    color: var(--additional);
+}
+
+.spin-card__title {
+    font-size: 24px;
+    color: var(--additional);
+    text-align: center;
+    width: 100%;
+    border: 1px dashed var(--additional);
+    border-left: none;
+    border-right: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+}
+
+.spin-card__last {
+    user-select: none;
+    border: 1px solid var(--additional);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.spin-card__subtitle-wrapper {
+    padding: 20px 0;
+    background-color: unset;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.spin-card__arrow {
+    fill: var(--maincolor);
+    width: 50px;
+}
+
+.spin-card__arrow--top {
+    transform: rotate(180deg);
+}
+
+.spin-card__border {
+    width: 100%;
+    border-bottom: 1px dashed var(--additional);
+}
+
+.spin-card__loading-btn {
+    width: 50px;
+    height: 50px;
+
+    animation: 2s linear 0s infinite loading-spin;
+}
+
+@keyframes loading-spin {
+    from {
+        transform: rotate(0);
+        fill: var(--additional);
+    }
+
+    50% {
+        fill: var(--maincolor);
+    }
+
+    to {
+        transform: rotate(360deg);
+        fill: var(--additional);
+    }
+}
+
+/*Last Spin Card*/

@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "build:all": "npm run build --workspace=apps/frontend && npm run build --workspace=apps/backend",
+    "start:prod": "concurrently \"npm run start:prod --workspace=apps/backend\" \"npm run start:prod --workspace=apps/frontend\""
+  }
+}
