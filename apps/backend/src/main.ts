@@ -9,7 +9,7 @@ async function start() {
   console.log(PORT);
   const app = await NestFactory.create(AppModule)
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('backend');
 
   app.useGlobalPipes(new ValidationPipe());
 
@@ -26,7 +26,7 @@ async function start() {
     credentials: true,
     origin: true,
   });
-  app.setGlobalPrefix('api');
+
   await app.listen(8081, () => '0.0.0.0')
 }
 
