@@ -28,7 +28,7 @@ const frontendProcess = spawn('npm', ['run', 'start'], {
 // Ждем запуска сервисов
 setTimeout(() => {
   // Прокси для API к бэкенду
-  app.use('/api', createProxyMiddleware({
+  app.use('/backend', createProxyMiddleware({
     target: `http://localhost:${BACKEND_PORT}`,
     changeOrigin: true,
   }));

@@ -1,13 +1,7 @@
-const nextConfig = {
-  async rewrites() {
-    // Для продакшена на Railway
-    return [
-      {
-        source: '/api/:path*',
-        destination: `https://freex-production.up.railway.app/api/:path*`,
-      },
-    ];
-  },
-};
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
 
-module.exports = nextConfig;
+module.exports = nextConfig
+module.exports = {
+  reactStrictMode: false, // Отключаем Strict Mode
+};
