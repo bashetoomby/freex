@@ -4,7 +4,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 
 const cookieParser = require('cookie-parser')
 async function start() {
-  const PORT = process.env.PORT || 7000
+  const PORT = process.env.PORT || 3001
   console.log(PORT);
   const app = await NestFactory.create(AppModule)
 
@@ -19,10 +19,11 @@ async function start() {
   app.use(cookieParser(process.env.COOKIE_SECRET))
   app.enableCors({
     credentials: true, 
-    origin: true,
+    origin: ['https://freex-production.up.railway.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Set-Cookie']
   });
+  app.setGlobalPrefix('api');
   await app.listen(PORT, () => '0.0.0.0')
 }
 
