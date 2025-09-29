@@ -56,9 +56,6 @@ setTimeout(() => {
     app.use('/backend', createProxyMiddleware({
         target: `http://localhost:${BACKEND_PORT}`,
         changeOrigin: true,
-        pathRewrite: {
-            '^/backend': '', // убираем /backend префикс
-        },
     }));
 
     // 3. Все остальное к Next.js
