@@ -22,9 +22,9 @@ export class AuthController {
         response.cookie('refreshToken', tokens.refreshToken, {
             maxAge: 24 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            // sameSite: 'strict',
-            // secure: true,
-            // domain: '.railway.app'
+            sameSite: 'strict',
+            secure: true,
+            domain: '.railway.app'
         })
         return { token: tokens.accessToken }
     }
@@ -41,9 +41,9 @@ export class AuthController {
         response.cookie('refreshToken', tokens.refreshToken, {
             maxAge: 24 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            // sameSite: 'strict',
-            // secure: true,
-            // domain: '.railway.app'
+            sameSite: 'strict',
+            secure: true,
+            domain: '.railway.app'
         })
         return { token: tokens.accessToken }
     }
@@ -57,9 +57,9 @@ export class AuthController {
 
         response.clearCookie('refreshToken', {
             httpOnly: true,
-            // sameSite: 'strict',
-            // secure: true,
-            // domain: '.railway.app'
+            sameSite: 'strict',
+            secure: true,
+            domain: '.railway.app'
         })
         await this.authService.logout(refreshToken)
         return HttpStatus.OK
@@ -74,9 +74,9 @@ export class AuthController {
         response.cookie('refreshToken', tokens.refreshToken, {
             maxAge: 24 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            // sameSite: 'strict',
-            // secure: true,
-            // domain: '.railway.app'
+            sameSite: 'strict',
+            secure: true,
+            domain: '.railway.app'
         })
         return { token: tokens.accessToken }
     }
