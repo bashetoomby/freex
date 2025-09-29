@@ -1,3 +1,5 @@
+'use client'
+
 import { IAuthInfo } from '@/app/interfaces';
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
@@ -46,6 +48,8 @@ export const SocketProvider = ({ children, session }: SocketProviderProps) => {
       autoConnect: true,
       transports: ['websocket', 'polling'],
       timeout: 15000,
+      // Убираем path, так как теперь используем /socket.io напрямую
+      // path: '/backend/socket.io' // УДАЛИТЬ ЭТУ СТРОКУ
     });
 
     const onConnect = () => {
