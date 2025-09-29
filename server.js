@@ -5,6 +5,7 @@ const http = require('http');
 
 const app = express();
 const server = http.createServer(app);
+
 const FRONTEND_PORT = process.env.PORT || 8080;
 const BACKEND_PORT = 8081;
 const FRONTEND_DEV_PORT = 3000;
@@ -29,38 +30,50 @@ const frontendProcess = spawn('npm', ['run', 'start'], {
 
 // Ждем запуска сервисов
 setTimeout(() => {
-    // Прокси для API к бэкенду
-    app.use('/backend', createProxyMiddleware({
-        target: `http://localhost:${BACKEND_PORT}`,
-        changeOrigin: true,
-    }));
+    console.log('Setting up proxies...');
 
-
-    // Специальный прокси для WebSocket
-    const wsProxy = createProxyMiddleware('/backend/socket.io', {
+    // 1. Сначала настройка WebSocket прокси
+    const socketProxy = createProxyMiddleware('/socket.io', {
         target: `http://localhost:${BACKEND_PORT}`,
         changeOrigin: true,
         ws: true,
         logLevel: 'debug'
     });
 
-    app.use(wsProxy);
+    // Применяем WebSocket прокси
+    app.use('/socket.io', socketProxy);
+    
+    // Обработка WebSocket upgrade
+    server.on('upgrade', (req, socket, head) => {
+        console.log('WebSocket upgrade request:', req.url);
+        
+        if (req.url.startsWith('/socket.io')) {
+            socketProxy.upgrade(req, socket, head);
+        }
+    });
 
-    // Обработка upgrade для WebSocket
-    server.on('upgrade', wsProxy.upgrade);
+    // 2. Прокси для HTTP API
+    app.use('/backend', createProxyMiddleware({
+        target: `http://localhost:${BACKEND_PORT}`,
+        changeOrigin: true,
+        pathRewrite: {
+            '^/backend': '', // убираем /backend префикс
+        },
+    }));
 
-    // Прокси для всего остального к Next.js
+    // 3. Все остальное к Next.js
     app.use('*', createProxyMiddleware({
         target: `http://localhost:${FRONTEND_DEV_PORT}`,
         changeOrigin: true,
     }));
 
-    app.listen(FRONTEND_PORT, () => {
-        console.log(`Main server running on port ${FRONTEND_PORT}`);
-        console.log(`API: http://localhost:${FRONTEND_PORT}/api -> http://localhost:${BACKEND_PORT}/api`);
-        console.log(`Frontend: http://localhost:${FRONTEND_PORT} -> http://localhost:${FRONTEND_DEV_PORT}`);
+    server.listen(FRONTEND_PORT, () => {
+        console.log(`🚀 Main server running on port ${FRONTEND_PORT}`);
+        console.log(`🔌 WebSocket: ws://localhost:${FRONTEND_PORT}/socket.io`);
+        console.log(`📡 API: http://localhost:${FRONTEND_PORT}/backend/api`);
+        console.log(`🌐 Frontend: http://localhost:${FRONTEND_PORT}`);
     });
-}, 5000);
+}, 8000);
 
 process.on('SIGTERM', () => {
     console.log('Shutting down...');

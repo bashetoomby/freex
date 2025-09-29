@@ -1,5 +1,3 @@
-'use client'
-
 import { IAuthInfo } from '@/app/interfaces';
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
@@ -28,15 +26,9 @@ export const SocketProvider = ({ children, session }: SocketProviderProps) => {
       return;
     }
 
-    // Определяем URL для WebSocket
     const getWebSocketUrl = () => {
       if (typeof window !== 'undefined') {
-        // В продакшене используем тот же домен с путем /backend
-        if (process.env.NODE_ENV === 'production') {
-          return window.location.origin;
-        }
-        // В разработке localhost
-        return 'http://localhost:8080';
+        return window.location.origin;
       }
       return 'http://localhost:8080';
     };
@@ -49,12 +41,11 @@ export const SocketProvider = ({ children, session }: SocketProviderProps) => {
         token: session.token
       },
       reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 2000,
       autoConnect: true,
       transports: ['websocket', 'polling'],
-      timeout: 10000,
-      path: '/backend/socket.io'
+      timeout: 15000,
     });
 
     const onConnect = () => {
@@ -78,6 +69,11 @@ export const SocketProvider = ({ children, session }: SocketProviderProps) => {
     newSocket.on('connect', onConnect);
     newSocket.on('disconnect', onDisconnect);
     newSocket.on('connect_error', onConnectError);
+
+    // Добавляем логирование всех событий для отладки
+    newSocket.onAny((event, ...args) => {
+      console.log(`📡 Socket event: ${event}`, args);
+    });
 
     setSocket(newSocket);
 
