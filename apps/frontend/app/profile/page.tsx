@@ -57,6 +57,7 @@ const Profile = () => {
     const [images, setImages] = useState<IImages[]>([])
     const [isLoadingGeo, setIsLoadingGeo] = useState(false)
     const [isSavedGeo, setIsSavedGeo] = useState(false)
+    const [isUserDataSaved, setIsUserDataSaved] = useState(false)
     const { notification, setNotification } = useNotifications()
 
     const descInputRef = useRef<HTMLDivElement>(null)
@@ -92,7 +93,9 @@ const Profile = () => {
 
     }, [])
 
-
+    useEffect(() => {
+        if (isUserDataSaved) setTimeout(() => { setIsUserDataSaved(false) }, 1000)
+    }, [isUserDataSaved])
 
     return (
         <main className="userdata">
@@ -147,6 +150,7 @@ const Profile = () => {
 
 
                 <Input
+                    isUserDataSaved={isUserDataSaved}
                     isLoading={isLoading}
                     inputLabel='gender'
                     inputTitle='Gender'
@@ -212,6 +216,7 @@ const Profile = () => {
                 </Input>
 
                 <Input
+                    isUserDataSaved={isUserDataSaved}
                     isLoading={isLoading}
                     inputLabel='name'
                     inputTitle='Name'
@@ -229,6 +234,7 @@ const Profile = () => {
                 </Input>
 
                 <Input
+                    isUserDataSaved={isUserDataSaved}
                     isLoading={isLoading}
                     inputLabel='age'
                     inputTitle='Age'
@@ -253,6 +259,7 @@ const Profile = () => {
 
 
                 <Input
+                    isUserDataSaved={isUserDataSaved}
                     isLoading={isLoading}
                     inputLabel='city'
                     inputTitle='City'
@@ -270,6 +277,7 @@ const Profile = () => {
                 </Input>
 
                 <Input
+                    isUserDataSaved={isUserDataSaved}
                     inputLabel='description'
                     inputTitle='Description'
                     inputValue={inputDesc}
@@ -302,13 +310,15 @@ const Profile = () => {
                     onClick={async () => {
                         setIsloading(true)
                         await requestWrapper(setUserDataRequest, async (res) => {
-                            const { fullfield } = await res.json()
-                            if (session && !session.userdata.fullfield && fullfield) {
-                                if (notification?.message === 'To continue, please fill in all required fields.') {
-                                    setNotification(null)
+                            if (res.status === 200) {
+                                setIsUserDataSaved(true)
+                                const { fullfield } = await res.json()
+                                if (session && !session.userdata.fullfield && fullfield) {
+                                    if (notification?.message === 'To continue, please fill in all required fields.') {
+                                        setNotification(null)
+                                    }
+                                    await refreshToken()
                                 }
-                                await refreshToken()
-                                // router.refresh()
                             }
                         }, () => { }, {
                             age: inputAge,
@@ -319,7 +329,7 @@ const Profile = () => {
                         })
                         setIsloading(false)
                     }}
-                    className='userdata__save-all'>
+                    className={`userdata__save-all ${isUserDataSaved && 'userdata__save-all--saved'}`}>
                     Save All
                 </button>
 
@@ -647,6 +657,7 @@ const Input = (
         required,
         inputTitle,
         inputLabel,
+        isUserDataSaved
     }: {
         children: React.ReactNode
         isLoading: boolean,
@@ -654,6 +665,7 @@ const Input = (
         required: boolean,
         inputTitle: string,
         inputLabel: string,
+        isUserDataSaved: boolean
     }) => {
     const [isUploading, setIsUploading] = useState(false)
     const [isSaved, setIsSaved] = useState(false)
@@ -718,11 +730,11 @@ const Input = (
             </div>
 
             <button className={`userdata__save-btn `
-                + `${isSaved && 'userdata__save-btn--saved'} `
+                + `${(isSaved || isUserDataSaved) && 'userdata__save-btn--saved'} `
                 + `${isUploading && 'userdata__save-btn--uploading'} `
             } disabled={isUploading || isLoading}>
                 <svg
-                    className={`save-btn__svg ${isSaved && 'save-btn__svg--saved'}`}
+                    className={`save-btn__svg ${(isSaved || isUserDataSaved) && 'save-btn__svg--saved'}`}
                     x="0px"
                     y="0px"
                     width="122.877px"

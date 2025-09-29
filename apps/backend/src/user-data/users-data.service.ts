@@ -73,7 +73,7 @@ export class UsersDataService {
             || !searchParams) {
             throw new HttpException("User without searchParams", HttpStatus.FORBIDDEN)
         }
-        else if (!userData || !userData.location) {
+        else if (!userData) {
             throw new HttpException("User without userData", HttpStatus.FORBIDDEN)
         }
         const usersData = await this.userRepository.findAll({
@@ -98,7 +98,7 @@ export class UsersDataService {
                     if (votesId.includes(a.userId) && !votesId.includes(b.userId)) return -1
                     else return 1
                 })
-                : userData
+                : usersData
             ,
 
             usersIdVotes: votes

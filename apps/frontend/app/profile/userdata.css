@@ -184,7 +184,7 @@
     display: flex;
     justify-content: space-between;
     border-bottom: 1px dashed var(--shadowcolor);
-    transition: all .5s ease;
+    transition: all 1s ease;
 }
 
 .userdata__input-field--saved {
@@ -329,7 +329,7 @@
     background-color: unset;
     color: var(--foreground);
     font-size: 24px;
-    transition: all .5s;
+    transition: all 1s;
 }
 
 .userdata__input--saved {
@@ -364,9 +364,13 @@
     align-items: center;
     font-size: 24px;
     border: 1px dashed var(--maincolor);
+    transition: all 1s;
 }
 
-
+.userdata__save-all--saved{
+    border: 1px dashed green;
+    transition: all 0s;
+}
 
 
 /* Skeleton */
