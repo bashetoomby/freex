@@ -465,14 +465,12 @@
 @media (max-width:700px) {
     .spin-card {
         width: 350px;
-        height: 55vh;
     }
 }
 
 @media (max-width:500px) {
     .spin-card {
         width: 300px;
-        height: 50vh;
     }
 }
 
