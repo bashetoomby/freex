@@ -395,6 +395,9 @@ const Chats = () => {
     }, [socket, isConnected]);
 
 
+    useEffect(()=>{
+        if(replyMessage) chatContainerRef.current?.scrollBy({behavior:'instant',top:70})
+    },[replyMessage])
     return (
         <main className="chats">
             <div

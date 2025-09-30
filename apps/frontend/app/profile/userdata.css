@@ -370,6 +370,7 @@
 .userdata__save-all--saved{
     border: 1px dashed green;
     transition: all 0s;
+    color: green;
 }
 
 

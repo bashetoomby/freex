@@ -24,6 +24,7 @@ export async function refreshToken() {
             method: 'POST',
             credentials: 'include',
         })
+        return refreshRes
     }
     if (refreshRes.status === 201) {
         const json: { token: string } = await refreshRes.json()

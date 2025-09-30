@@ -482,7 +482,7 @@
 /* Message */
 
 .chat-main__message {
-    font-size: 24px;
+    font-size: 18px;
     position: relative;
     width: fit-content;
     -webkit-user-select: none;
@@ -523,7 +523,7 @@
     max-width: 320px;
     min-width: 80px;
     text-align: left;
-    word-break: break-all;
+    overflow-wrap: break-word;
     color: var(--foreground);
     transition: all .5s;
     border: 1px solid var(--lightbg);
