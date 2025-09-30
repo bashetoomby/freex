@@ -15,7 +15,7 @@ async function start() {
     app.useGlobalPipes(new ValidationPipe());
 
     app.useStaticAssets('/images', {
-        prefix: '/images/',
+        prefix: '/backend/images/',
     });
 
     const config = new DocumentBuilder()
