@@ -16,6 +16,15 @@ export async function refreshToken() {
         method: 'POST',
         credentials: 'include',
     })
+    if (refreshRes.status === 401) {
+        await fetch('/api/auth/logout', {
+            method: 'POST'
+        })
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+            method: 'POST',
+            credentials: 'include',
+        })
+    }
     if (refreshRes.status === 201) {
         const json: { token: string } = await refreshRes.json()
         const loginRes = await fetch(`/api/auth/login`, {
@@ -40,14 +49,14 @@ export async function requestWrapper(
 ) {
     const authInfo: IAuthInfo | null = await getAuthInfo()
     if (authInfo && authInfo.isAuth && authInfo.token) {
-        const res:Response = await requset(authInfo, body)
+        const res: Response = await requset(authInfo, body)
         if (res.status === 403) {
             const refreshRes: Response | null = await refreshToken()
 
             if (refreshRes?.status === 201) {
                 const json: RequestCookie = await refreshRes.json()
                 const refreshAuthInfo = JSON.parse(json?.value || "{}")
-                const res:Response = await requset(refreshAuthInfo, body)
+                const res: Response = await requset(refreshAuthInfo, body)
                 response(res)
                 return res
 
