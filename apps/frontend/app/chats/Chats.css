@@ -482,7 +482,7 @@
 /* Message */
 
 .chat-main__message {
-    font-size: 24px;
+    font-size: 18px;
     position: relative;
     width: fit-content;
     -webkit-user-select: none;
@@ -514,7 +514,7 @@
 }
 
 
-.chat-main__message--user {
+.chat-main__message {
     padding: 15px;
     padding-bottom: 20px;
     background-color: var(--lightbg);
