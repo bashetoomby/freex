@@ -619,7 +619,7 @@
     background-color: #a200ff42;
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
-    z-index: 1000;
+    z-index: 1;
     width: 200px;
     padding: 15px;
     border-radius: 10px;

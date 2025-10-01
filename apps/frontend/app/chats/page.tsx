@@ -395,9 +395,9 @@ const Chats = () => {
     }, [socket, isConnected]);
 
 
-    useEffect(()=>{
-        if(replyMessage) chatContainerRef.current?.scrollBy({behavior:'instant',top:70})
-    },[replyMessage])
+    useEffect(() => {
+        if (replyMessage) chatContainerRef.current?.scrollBy({ behavior: 'instant', top: 70 })
+    }, [replyMessage])
     return (
         <main className="chats">
             <div
@@ -987,193 +987,198 @@ const ChatMessage = ({
     if (!message) return null
 
     return (
-        <div
-            onDoubleClick={(e) => {
-                e.preventDefault()
-                if (message.messageType === 'user') setReplyMessage(message)
-            }}
-            onContextMenu={(e) => handleContextMenu(e, message.id)}
-            ref={ref}
-            key={message.createdAt}
-            id={`message-${message?.createdAt}`}
-            className={`chat-main__message `
-                + `chat-main__message--${message.messageType} `
-                + `chat-main__message--${message.messageType === 'user' && message.userId === session?.userdata.id ? 'right' : 'left'} `
-                + `chat-main__message--${message.systemType} `
-                + `chat-main__message--${message.id === isHighlighted && isHighlighted !== -1 && 'highlighted'} `
-                + `chat-main__message--${contextMenu.visible && 'contex-active'} `
-                + `chat-main__message--${message.status === 'new' && message.userId !== session?.userdata.id && message.messageType === 'user' && 'user-new'} `
-            }>
-            {contextMenu.visible && (
-                <div
-                    className="message__context-menu"
-                    style={{
-                        left: `${contextMenu.x}px`,
-                        top: `${contextMenu.y}px`,
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <button
-                        className="context-menu__item"
+        <>
+
+
+            <div
+                onDoubleClick={(e) => {
+                    e.preventDefault()
+                    if (message.messageType === 'user') setReplyMessage(message)
+                }}
+                onContextMenu={(e) => handleContextMenu(e, message.id)}
+                ref={ref}
+                key={message.createdAt}
+                id={`message-${message?.createdAt}`}
+                className={`chat-main__message `
+                    + `chat-main__message--${message.messageType} `
+                    + `chat-main__message--${message.messageType === 'user' && message.userId === session?.userdata.id ? 'right' : 'left'} `
+                    + `chat-main__message--${message.systemType} `
+                    + `chat-main__message--${message.id === isHighlighted && isHighlighted !== -1 && 'highlighted'} `
+                    + `chat-main__message--${contextMenu.visible && 'contex-active'} `
+                    + `chat-main__message--${message.status === 'new' && message.userId !== session?.userdata.id && message.messageType === 'user' && 'user-new'} `
+                }>
+                
+
+                {message.repliedTo &&
+
+                    <div
                         onClick={() => {
-                            setReplyMessage(message)
+                            const repliedMessage = document.getElementById(`message-${message.repliedTo?.createdAt}`);
+                            if (repliedMessage) repliedMessage.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                            setIsHighlighted(message.repliedTo?.id || -1)
                         }}
-                    >
-                        <div className="context-menu__icon">
-                            <svg
-                                version="1.1"
-                                id="Layer_1"
-                                xmlns="http://www.w3.org/2000/svg"
-                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                x="0px"
-                                y="0px"
-                                viewBox="0 0 120.46 122.88"
-                                xmlSpace="preserve"
-                            >
-                                <style
-                                    type="text/css"
-                                    dangerouslySetInnerHTML={{
-                                        __html: ".st0{fill-rule:evenodd;clip-rule:evenodd;}"
-                                    }}
-                                />
-                                <g>
-                                    <path
-                                        className="st0"
-                                        d="M17.2,0h62.29c4.73,0,9.03,1.93,12.15,5.05c3.12,3.12,5.05,7.42,5.05,12.15v38.35c0,4.73-1.93,9.03-5.05,12.15 c-3.12,3.12-7.42,5.05-12.15,5.05H46.92L20.81,95.2c-1.21,1.04-3.04,0.9-4.08-0.32c-0.51-0.6-0.74-1.34-0.69-2.07l1.39-20.07H17.2 c-4.73,0-9.03-1.93-12.15-5.05C1.93,64.58,0,60.28,0,55.55V17.2c0-4.73,1.93-9.03,5.05-12.15C8.16,1.93,12.46,0,17.2,0L17.2,0 L17.2,0z M63.12,29.37c4.48,0,8.11,3.63,8.11,8.11c0,4.48-3.63,8.11-8.11,8.11c-4.48,0-8.11-3.63-8.11-8.11 C55.01,33,58.64,29.37,63.12,29.37L63.12,29.37z M33.69,29.37c4.48,0,8.11,3.63,8.11,8.11c0,4.48-3.63,8.11-8.11,8.11 s-8.11-3.63-8.11-8.11C25.58,33,29.21,29.37,33.69,29.37L33.69,29.37z M106.79,27.98c3.37,0.65,6.39,2.31,8.73,4.65 c3.05,3.05,4.95,7.26,4.95,11.9v38.35c0,4.64-1.89,8.85-4.95,11.9c-3.05,3.05-7.26,4.95-11.9,4.95h-0.61l1.42,20.44l0,0 c0.04,0.64-0.15,1.3-0.6,1.82c-0.91,1.07-2.52,1.19-3.58,0.28l-26.21-23.2H39.49l17.01-17.3h36.04c7.86,0,14.3-6.43,14.3-14.3 V29.11C106.83,28.73,106.82,28.35,106.79,27.98L106.79,27.98L106.79,27.98z M79.48,5.8H17.2c-3.13,0-5.98,1.28-8.05,3.35 C7.08,11.22,5.8,14.06,5.8,17.2v38.35c0,3.13,1.28,5.98,3.35,8.05c2.07,2.07,4.92,3.35,8.05,3.35h3.34v0.01l0.19,0.01 c1.59,0.11,2.8,1.49,2.69,3.08l-1.13,16.26l21.54-18.52c0.52-0.52,1.24-0.84,2.04-0.84h33.61c3.13,0,5.98-1.28,8.05-3.35 c2.07-2.07,3.35-4.92,3.35-8.05V17.2c0-3.13-1.28-5.98-3.35-8.05C85.46,7.08,82.61,5.8,79.48,5.8L79.48,5.8L79.48,5.8z"
-                                    />
-                                </g>
-                            </svg>
-                        </div>
-                        Reply
-                    </button>
-                    <button
-                        className="context-menu__item"
-                        onClick={() => {
-                            navigator.clipboard.writeText(message.message)
-                        }}
-                    >
-                        <div className="context-menu__icon">
-                            <svg
-                                version="1.1"
-                                id="Layer_1"
-                                x="0px"
-                                y="0px"
-                                viewBox="0 0 115.77 122.88"
-                                xmlSpace="preserve"
-                            >
-                                <style
-                                    type="text/css"
-                                    dangerouslySetInnerHTML={{
-                                        __html: ".st0{fill-rule:evenodd;clip-rule:evenodd;}"
-                                    }}
-                                />
-                                <g>
-                                    <path
-                                        className="st0"
-                                        d="M89.62,13.96v7.73h12.19h0.01v0.02c3.85,0.01,7.34,1.57,9.86,4.1c2.5,2.51,4.06,5.98,4.07,9.82h0.02v0.02 v73.27v0.01h-0.02c-0.01,3.84-1.57,7.33-4.1,9.86c-2.51,2.5-5.98,4.06-9.82,4.07v0.02h-0.02h-61.7H40.1v-0.02 c-3.84-0.01-7.34-1.57-9.86-4.1c-2.5-2.51-4.06-5.98-4.07-9.82h-0.02v-0.02V92.51H13.96h-0.01v-0.02c-3.84-0.01-7.34-1.57-9.86-4.1 c-2.5-2.51-4.06-5.98-4.07-9.82H0v-0.02V13.96v-0.01h0.02c0.01-3.85,1.58-7.34,4.1-9.86c2.51-2.5,5.98-4.06,9.82-4.07V0h0.02h61.7 h0.01v0.02c3.85,0.01,7.34,1.57,9.86,4.1c2.5,2.51,4.06,5.98,4.07,9.82h0.02V13.96L89.62,13.96z M79.04,21.69v-7.73v-0.02h0.02 c0-0.91-0.39-1.75-1.01-2.37c-0.61-0.61-1.46-1-2.37-1v0.02h-0.01h-61.7h-0.02v-0.02c-0.91,0-1.75,0.39-2.37,1.01 c-0.61,0.61-1,1.46-1,2.37h0.02v0.01v64.59v0.02h-0.02c0,0.91,0.39,1.75,1.01,2.37c0.61,0.61,1.46,1,2.37,1v-0.02h0.01h12.19V35.65 v-0.01h0.02c0.01-3.85,1.58-7.34,4.1-9.86c2.51-2.5,5.98-4.06,9.82-4.07v-0.02h0.02H79.04L79.04,21.69z M105.18,108.92V35.65v-0.02 h0.02c0-0.91-0.39-1.75-1.01-2.37c-0.61-0.61-1.46-1-2.37-1v0.02h-0.01h-61.7h-0.02v-0.02c-0.91,0-1.75,0.39-2.37,1.01 c-0.61,0.61-1,1.46-1,2.37h0.02v0.01v73.27v0.02h-0.02c0,0.91,0.39,1.75,1.01,2.37c0.61,0.61,1.46,1,2.37,1v-0.02h0.01h61.7h0.02 v0.02c0.91,0,1.75-0.39,2.37-1.01c0.61-0.61,1-1.46,1-2.37h-0.02V108.92L105.18,108.92z"
-                                    />
-                                </g>
-                            </svg>
-                        </div>
-                        Copy
-                    </button>
-                    <button
-                        className="context-menu__item"
-                        onClick={() => handleMenuAction('delete')}
-                    >
-                        <div className="context-menu__icon">
-                            <svg
-                                id="Layer_1"
-                                data-name="Layer 1"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 110.61 122.88"
-                            >
-                                <title>trash</title>
-                                <path d="M39.27,58.64a4.74,4.74,0,1,1,9.47,0V93.72a4.74,4.74,0,1,1-9.47,0V58.64Zm63.6-19.86L98,103a22.29,22.29,0,0,1-6.33,14.1,19.41,19.41,0,0,1-13.88,5.78h-45a19.4,19.4,0,0,1-13.86-5.78l0,0A22.31,22.31,0,0,1,12.59,103L7.74,38.78H0V25c0-3.32,1.63-4.58,4.84-4.58H27.58V10.79A10.82,10.82,0,0,1,38.37,0H72.24A10.82,10.82,0,0,1,83,10.79v9.62h23.35a6.19,6.19,0,0,1,1,.06A3.86,3.86,0,0,1,110.59,24c0,.2,0,.38,0,.57V38.78Zm-9.5.17H17.24L22,102.3a12.82,12.82,0,0,0,3.57,8.1l0,0a10,10,0,0,0,7.19,3h45a10.06,10.06,0,0,0,7.19-3,12.8,12.8,0,0,0,3.59-8.1L93.37,39ZM71,20.41V12.05H39.64v8.36ZM61.87,58.64a4.74,4.74,0,1,1,9.47,0V93.72a4.74,4.74,0,1,1-9.47,0V58.64Z" />
-                            </svg>
-                        </div>
-                        Delete
-                    </button>
-                </div>
-            )}
+                        className="message-reply">
 
-            {message.repliedTo &&
+                        {message.repliedTo?.message}
+                    </div>
+                }
+                {message.messageType === 'system'
+                    ? message?.message?.replace(`&${session?.userdata.id}&`, `You`).replace(`&${chatUserData?.userId}&`, chatUserData?.name || '')
+                    : message.message
+                }
+                {
+                    <>
 
-                <div
-                    onClick={() => {
-                        const repliedMessage = document.getElementById(`message-${message.repliedTo?.createdAt}`);
-                        if (repliedMessage) repliedMessage.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                        setIsHighlighted(message.repliedTo?.id || -1)
-                    }}
-                    className="message-reply">
+                        {message?.systemType !== 'date' &&
+                            <span className="chat-main__message-time">
 
-                    {message.repliedTo?.message}
-                </div>
-            }
-            {message.messageType === 'system'
-                ? message?.message?.replace(`&${session?.userdata.id}&`, `You`).replace(`&${chatUserData?.userId}&`, chatUserData?.name || '')
-                : message.message
-            }
-            {
-                <>
+                                {new Date(message?.createdAt).getHours().toString().padStart(2, '0') + ':' + new Date(message?.createdAt).getMinutes().toString().padStart(2, '0')}
+                            </span>
+                        }
 
-                    {message?.systemType !== 'date' &&
-                        <span className="chat-main__message-time">
+                        <span className="chat-main__message-status">
 
-                            {new Date(message?.createdAt).getHours().toString().padStart(2, '0') + ':' + new Date(message?.createdAt).getMinutes().toString().padStart(2, '0')}
+                            {message.userId === session?.userdata.id &&
+                                <svg
+                                    version="1.1"
+                                    id="Layer_1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                    x="0px"
+                                    y="0px"
+                                    width="122.877px"
+                                    height="101.052px"
+                                    viewBox="0 0 122.877 101.052"
+                                    enableBackground="new 0 0 122.877 101.052"
+                                    xmlSpace="preserve"
+                                >
+                                    <g>
+                                        <path d="M4.43,63.63c-2.869-2.755-4.352-6.42-4.427-10.11c-0.074-3.689,1.261-7.412,4.015-10.281 c2.752-2.867,6.417-4.351,10.106-4.425c3.691-0.076,7.412,1.255,10.283,4.012l24.787,23.851L98.543,3.989l1.768,1.349l-1.77-1.355 c0.141-0.183,0.301-0.339,0.479-0.466c2.936-2.543,6.621-3.691,10.223-3.495V0.018l0.176,0.016c3.623,0.24,7.162,1.85,9.775,4.766 c2.658,2.965,3.863,6.731,3.662,10.412h0.004l-0.016,0.176c-0.236,3.558-1.791,7.035-4.609,9.632l-59.224,72.09l0.004,0.004 c-0.111,0.141-0.236,0.262-0.372,0.368c-2.773,2.435-6.275,3.629-9.757,3.569c-3.511-0.061-7.015-1.396-9.741-4.016L4.43,63.63 L4.43,63.63z" />
+                                    </g>
+                                </svg>
+                            }
+                            {message.userId === session?.userdata.id && message.status === 'viewed' &&
+
+                                <svg
+                                    version="1.1"
+                                    id="Layer_1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                    x="0px"
+                                    y="0px"
+                                    width="122.877px"
+                                    height="101.052px"
+                                    viewBox="0 0 122.877 101.052"
+                                    enableBackground="new 0 0 122.877 101.052"
+                                    xmlSpace="preserve"
+                                >
+                                    <g>
+                                        <path d="M4.43,63.63c-2.869-2.755-4.352-6.42-4.427-10.11c-0.074-3.689,1.261-7.412,4.015-10.281 c2.752-2.867,6.417-4.351,10.106-4.425c3.691-0.076,7.412,1.255,10.283,4.012l24.787,23.851L98.543,3.989l1.768,1.349l-1.77-1.355 c0.141-0.183,0.301-0.339,0.479-0.466c2.936-2.543,6.621-3.691,10.223-3.495V0.018l0.176,0.016c3.623,0.24,7.162,1.85,9.775,4.766 c2.658,2.965,3.863,6.731,3.662,10.412h0.004l-0.016,0.176c-0.236,3.558-1.791,7.035-4.609,9.632l-59.224,72.09l0.004,0.004 c-0.111,0.141-0.236,0.262-0.372,0.368c-2.773,2.435-6.275,3.629-9.757,3.569c-3.511-0.061-7.015-1.396-9.741-4.016L4.43,63.63 L4.43,63.63z" />
+                                    </g>
+                                </svg>
+
+                            }
                         </span>
-                    }
-
-                    <span className="chat-main__message-status">
-
-                        {message.userId === session?.userdata.id &&
-                            <svg
-                                version="1.1"
-                                id="Layer_1"
-                                xmlns="http://www.w3.org/2000/svg"
-                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                x="0px"
-                                y="0px"
-                                width="122.877px"
-                                height="101.052px"
-                                viewBox="0 0 122.877 101.052"
-                                enableBackground="new 0 0 122.877 101.052"
-                                xmlSpace="preserve"
-                            >
-                                <g>
-                                    <path d="M4.43,63.63c-2.869-2.755-4.352-6.42-4.427-10.11c-0.074-3.689,1.261-7.412,4.015-10.281 c2.752-2.867,6.417-4.351,10.106-4.425c3.691-0.076,7.412,1.255,10.283,4.012l24.787,23.851L98.543,3.989l1.768,1.349l-1.77-1.355 c0.141-0.183,0.301-0.339,0.479-0.466c2.936-2.543,6.621-3.691,10.223-3.495V0.018l0.176,0.016c3.623,0.24,7.162,1.85,9.775,4.766 c2.658,2.965,3.863,6.731,3.662,10.412h0.004l-0.016,0.176c-0.236,3.558-1.791,7.035-4.609,9.632l-59.224,72.09l0.004,0.004 c-0.111,0.141-0.236,0.262-0.372,0.368c-2.773,2.435-6.275,3.629-9.757,3.569c-3.511-0.061-7.015-1.396-9.741-4.016L4.43,63.63 L4.43,63.63z" />
-                                </g>
-                            </svg>
-                        }
-                        {message.userId === session?.userdata.id && message.status === 'viewed' &&
-
-                            <svg
-                                version="1.1"
-                                id="Layer_1"
-                                xmlns="http://www.w3.org/2000/svg"
-                                xmlnsXlink="http://www.w3.org/1999/xlink"
-                                x="0px"
-                                y="0px"
-                                width="122.877px"
-                                height="101.052px"
-                                viewBox="0 0 122.877 101.052"
-                                enableBackground="new 0 0 122.877 101.052"
-                                xmlSpace="preserve"
-                            >
-                                <g>
-                                    <path d="M4.43,63.63c-2.869-2.755-4.352-6.42-4.427-10.11c-0.074-3.689,1.261-7.412,4.015-10.281 c2.752-2.867,6.417-4.351,10.106-4.425c3.691-0.076,7.412,1.255,10.283,4.012l24.787,23.851L98.543,3.989l1.768,1.349l-1.77-1.355 c0.141-0.183,0.301-0.339,0.479-0.466c2.936-2.543,6.621-3.691,10.223-3.495V0.018l0.176,0.016c3.623,0.24,7.162,1.85,9.775,4.766 c2.658,2.965,3.863,6.731,3.662,10.412h0.004l-0.016,0.176c-0.236,3.558-1.791,7.035-4.609,9.632l-59.224,72.09l0.004,0.004 c-0.111,0.141-0.236,0.262-0.372,0.368c-2.773,2.435-6.275,3.629-9.757,3.569c-3.511-0.061-7.015-1.396-9.741-4.016L4.43,63.63 L4.43,63.63z" />
-                                </g>
-                            </svg>
-
-                        }
-                    </span>
 
 
-                </>
+                    </>
 
 
-            }
-        </div>
+                }
+            </div>
+            {contextMenu.visible && (
+                    <div
+                        className="message__context-menu"
+                        style={{
+                            left: `${contextMenu.x}px`,
+                            top: `${contextMenu.y}px`,
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className="context-menu__item"
+                            onClick={() => {
+                                setReplyMessage(message)
+                            }}
+                        >
+                            <div className="context-menu__icon">
+                                <svg
+                                    version="1.1"
+                                    id="Layer_1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlnsXlink="http://www.w3.org/1999/xlink"
+                                    x="0px"
+                                    y="0px"
+                                    viewBox="0 0 120.46 122.88"
+                                    xmlSpace="preserve"
+                                >
+                                    <style
+                                        type="text/css"
+                                        dangerouslySetInnerHTML={{
+                                            __html: ".st0{fill-rule:evenodd;clip-rule:evenodd;}"
+                                        }}
+                                    />
+                                    <g>
+                                        <path
+                                            className="st0"
+                                            d="M17.2,0h62.29c4.73,0,9.03,1.93,12.15,5.05c3.12,3.12,5.05,7.42,5.05,12.15v38.35c0,4.73-1.93,9.03-5.05,12.15 c-3.12,3.12-7.42,5.05-12.15,5.05H46.92L20.81,95.2c-1.21,1.04-3.04,0.9-4.08-0.32c-0.51-0.6-0.74-1.34-0.69-2.07l1.39-20.07H17.2 c-4.73,0-9.03-1.93-12.15-5.05C1.93,64.58,0,60.28,0,55.55V17.2c0-4.73,1.93-9.03,5.05-12.15C8.16,1.93,12.46,0,17.2,0L17.2,0 L17.2,0z M63.12,29.37c4.48,0,8.11,3.63,8.11,8.11c0,4.48-3.63,8.11-8.11,8.11c-4.48,0-8.11-3.63-8.11-8.11 C55.01,33,58.64,29.37,63.12,29.37L63.12,29.37z M33.69,29.37c4.48,0,8.11,3.63,8.11,8.11c0,4.48-3.63,8.11-8.11,8.11 s-8.11-3.63-8.11-8.11C25.58,33,29.21,29.37,33.69,29.37L33.69,29.37z M106.79,27.98c3.37,0.65,6.39,2.31,8.73,4.65 c3.05,3.05,4.95,7.26,4.95,11.9v38.35c0,4.64-1.89,8.85-4.95,11.9c-3.05,3.05-7.26,4.95-11.9,4.95h-0.61l1.42,20.44l0,0 c0.04,0.64-0.15,1.3-0.6,1.82c-0.91,1.07-2.52,1.19-3.58,0.28l-26.21-23.2H39.49l17.01-17.3h36.04c7.86,0,14.3-6.43,14.3-14.3 V29.11C106.83,28.73,106.82,28.35,106.79,27.98L106.79,27.98L106.79,27.98z M79.48,5.8H17.2c-3.13,0-5.98,1.28-8.05,3.35 C7.08,11.22,5.8,14.06,5.8,17.2v38.35c0,3.13,1.28,5.98,3.35,8.05c2.07,2.07,4.92,3.35,8.05,3.35h3.34v0.01l0.19,0.01 c1.59,0.11,2.8,1.49,2.69,3.08l-1.13,16.26l21.54-18.52c0.52-0.52,1.24-0.84,2.04-0.84h33.61c3.13,0,5.98-1.28,8.05-3.35 c2.07-2.07,3.35-4.92,3.35-8.05V17.2c0-3.13-1.28-5.98-3.35-8.05C85.46,7.08,82.61,5.8,79.48,5.8L79.48,5.8L79.48,5.8z"
+                                        />
+                                    </g>
+                                </svg>
+                            </div>
+                            Reply
+                        </button>
+                        <button
+                            className="context-menu__item"
+                            onClick={() => {
+                                navigator.clipboard.writeText(message.message)
+                            }}
+                        >
+                            <div className="context-menu__icon">
+                                <svg
+                                    version="1.1"
+                                    id="Layer_1"
+                                    x="0px"
+                                    y="0px"
+                                    viewBox="0 0 115.77 122.88"
+                                    xmlSpace="preserve"
+                                >
+                                    <style
+                                        type="text/css"
+                                        dangerouslySetInnerHTML={{
+                                            __html: ".st0{fill-rule:evenodd;clip-rule:evenodd;}"
+                                        }}
+                                    />
+                                    <g>
+                                        <path
+                                            className="st0"
+                                            d="M89.62,13.96v7.73h12.19h0.01v0.02c3.85,0.01,7.34,1.57,9.86,4.1c2.5,2.51,4.06,5.98,4.07,9.82h0.02v0.02 v73.27v0.01h-0.02c-0.01,3.84-1.57,7.33-4.1,9.86c-2.51,2.5-5.98,4.06-9.82,4.07v0.02h-0.02h-61.7H40.1v-0.02 c-3.84-0.01-7.34-1.57-9.86-4.1c-2.5-2.51-4.06-5.98-4.07-9.82h-0.02v-0.02V92.51H13.96h-0.01v-0.02c-3.84-0.01-7.34-1.57-9.86-4.1 c-2.5-2.51-4.06-5.98-4.07-9.82H0v-0.02V13.96v-0.01h0.02c0.01-3.85,1.58-7.34,4.1-9.86c2.51-2.5,5.98-4.06,9.82-4.07V0h0.02h61.7 h0.01v0.02c3.85,0.01,7.34,1.57,9.86,4.1c2.5,2.51,4.06,5.98,4.07,9.82h0.02V13.96L89.62,13.96z M79.04,21.69v-7.73v-0.02h0.02 c0-0.91-0.39-1.75-1.01-2.37c-0.61-0.61-1.46-1-2.37-1v0.02h-0.01h-61.7h-0.02v-0.02c-0.91,0-1.75,0.39-2.37,1.01 c-0.61,0.61-1,1.46-1,2.37h0.02v0.01v64.59v0.02h-0.02c0,0.91,0.39,1.75,1.01,2.37c0.61,0.61,1.46,1,2.37,1v-0.02h0.01h12.19V35.65 v-0.01h0.02c0.01-3.85,1.58-7.34,4.1-9.86c2.51-2.5,5.98-4.06,9.82-4.07v-0.02h0.02H79.04L79.04,21.69z M105.18,108.92V35.65v-0.02 h0.02c0-0.91-0.39-1.75-1.01-2.37c-0.61-0.61-1.46-1-2.37-1v0.02h-0.01h-61.7h-0.02v-0.02c-0.91,0-1.75,0.39-2.37,1.01 c-0.61,0.61-1,1.46-1,2.37h0.02v0.01v73.27v0.02h-0.02c0,0.91,0.39,1.75,1.01,2.37c0.61,0.61,1.46,1,2.37,1v-0.02h0.01h61.7h0.02 v0.02c0.91,0,1.75-0.39,2.37-1.01c0.61-0.61,1-1.46,1-2.37h-0.02V108.92L105.18,108.92z"
+                                        />
+                                    </g>
+                                </svg>
+                            </div>
+                            Copy
+                        </button>
+                        <button
+                            className="context-menu__item"
+                            onClick={() => handleMenuAction('delete')}
+                        >
+                            <div className="context-menu__icon">
+                                <svg
+                                    id="Layer_1"
+                                    data-name="Layer 1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 110.61 122.88"
+                                >
+                                    <title>trash</title>
+                                    <path d="M39.27,58.64a4.74,4.74,0,1,1,9.47,0V93.72a4.74,4.74,0,1,1-9.47,0V58.64Zm63.6-19.86L98,103a22.29,22.29,0,0,1-6.33,14.1,19.41,19.41,0,0,1-13.88,5.78h-45a19.4,19.4,0,0,1-13.86-5.78l0,0A22.31,22.31,0,0,1,12.59,103L7.74,38.78H0V25c0-3.32,1.63-4.58,4.84-4.58H27.58V10.79A10.82,10.82,0,0,1,38.37,0H72.24A10.82,10.82,0,0,1,83,10.79v9.62h23.35a6.19,6.19,0,0,1,1,.06A3.86,3.86,0,0,1,110.59,24c0,.2,0,.38,0,.57V38.78Zm-9.5.17H17.24L22,102.3a12.82,12.82,0,0,0,3.57,8.1l0,0a10,10,0,0,0,7.19,3h45a10.06,10.06,0,0,0,7.19-3,12.8,12.8,0,0,0,3.59-8.1L93.37,39ZM71,20.41V12.05H39.64v8.36ZM61.87,58.64a4.74,4.74,0,1,1,9.47,0V93.72a4.74,4.74,0,1,1-9.47,0V58.64Z" />
+                                </svg>
+                            </div>
+                            Delete
+                        </button>
+                    </div>
+                )}
+        </>
     );
 }
 
