@@ -422,7 +422,7 @@
     font-size: 24px;
     line-height: 24px;
     text-align: left;
-    overflow-wrap: break-word;
+    word-break: break-all;
     vertical-align: middle;
     padding: 20px 10px;
     max-height: 160px;
@@ -482,7 +482,7 @@
 /* Message */
 
 .chat-main__message {
-    font-size: 18px;
+    font-size: 24px;
     position: relative;
     width: fit-content;
     -webkit-user-select: none;
@@ -523,7 +523,7 @@
     max-width: 320px;
     min-width: 80px;
     text-align: left;
-    overflow-wrap: break-word;
+    word-break: break-all;
     color: var(--foreground);
     transition: all .5s;
     border: 1px solid var(--lightbg);
@@ -619,7 +619,7 @@
     background-color: #a200ff42;
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
-    z-index: 1;
+    z-index: 1000;
     width: 200px;
     padding: 15px;
     border-radius: 10px;
