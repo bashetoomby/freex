@@ -401,7 +401,7 @@ const Chats = () => {
             if ((chatContainerRef.current?.scrollHeight || 0)
                 - (chatContainerRef.current?.scrollTop || 0)
                 - (chatContainerRef.current?.clientHeight || 0)
-                - (lastMessage?.scrollHeight || 0) < 20)
+                - (lastMessage?.scrollHeight || 0) <= 70)
                 chatContainerRef.current?.scrollBy({ behavior: 'instant', top: 70 })
         }
     }, [replyMessage])
