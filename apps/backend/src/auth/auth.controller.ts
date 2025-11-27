@@ -24,7 +24,7 @@ export class AuthController {
             httpOnly: true,
             sameSite: 'strict',
             secure: true,
-            domain: '.railway.app'
+            
         })
         return { token: tokens.accessToken }
     }
@@ -43,7 +43,7 @@ export class AuthController {
             httpOnly: true,
             sameSite: 'strict',
             secure: true,
-            domain: '.railway.app'
+            
         })
         return { token: tokens.accessToken }
     }
@@ -59,7 +59,7 @@ export class AuthController {
             httpOnly: true,
             sameSite: 'strict',
             secure: true,
-            domain: '.railway.app'
+            
         })
         await this.authService.logout(refreshToken)
         return HttpStatus.OK
@@ -76,7 +76,7 @@ export class AuthController {
             httpOnly: true,
             sameSite: 'strict',
             secure: true,
-            domain: '.railway.app'
+            
         })
         return { token: tokens.accessToken }
     }
