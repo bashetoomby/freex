@@ -669,35 +669,37 @@ const Chats = () => {
                                 />
                             })}
                             <div ref={messagesEndRef} />
+                            <div className="scroll-btn-wrapper">
+
+                                <button
+                                    className={`chat-main__scroll-btn ${showScrollBtn && 'scroll-btn--visible'}`}
+                                    onClick={() => {
+                                        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+                                    }}
+                                >
+                                    {(() => {
+                                        const unreadCount = activeChat.messages.reduce((count, message) =>
+                                            (message.status === 'new' && message.recipientId === session?.userdata.id) ? count + 1 : count,
+                                            0
+                                        );
+                                        if (unreadCount > 99) return <span className="chat-main__unread-q">{'99+'}</span>
+                                        return unreadCount > 0 ? <span className="chat-main__unread-q">{unreadCount}</span> : null;
+                                    })()}
+                                    <svg
+                                        x="0px"
+                                        y="0px"
+                                        width="122.88px"
+                                        height="80.593px"
+                                        viewBox="0 0 122.88 80.593"
+                                        xmlSpace="preserve"
+                                    >
+                                        <path d="M122.88 0L122.88 30.82 61.44 80.593 0 30.82 0 0 61.44 49.772 122.88 0z" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
 
-                        <button
-                            className={`chat-main__scroll-btn ${showScrollBtn && 'scroll-btn--visible'}`}
-                            onClick={() => {
-                                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-                            }}
-                        >
-                            {(() => {
-                                const unreadCount = activeChat.messages.reduce((count, message) =>
-                                    (message.status === 'new' && message.recipientId === session?.userdata.id) ? count + 1 : count,
-                                    0
-                                );
-                                if (unreadCount > 99) return <span className="chat-main__unread-q">{'99+'}</span>
-                                return unreadCount > 0 ? <span className="chat-main__unread-q">{unreadCount}</span> : null;
-                            })()}
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                x="0px"
-                                y="0px"
-                                width="122.88px"
-                                height="80.593px"
-                                viewBox="0 0 122.88 80.593"
-                                xmlSpace="preserve"
-                            >
-                                <path d="M122.88 0L122.88 30.82 61.44 80.593 0 30.82 0 0 61.44 49.772 122.88 0z" />
-                            </svg>
-                        </button>
                         {
                             replyMessage &&
                             <div className="chat-main__reply">
@@ -891,12 +893,12 @@ const ChatMessage = ({
     setIsHighlighted: Dispatch<SetStateAction<number>>,
     chatContainerRef: RefObject<HTMLDivElement>
 }) => {
-    const ref = useRef<HTMLDivElement>(null);
-
+    const messageRef = useRef<HTMLDivElement>(null);
+    const menuRef = useRef<HTMLDivElement | null>(null);
 
 
     useEffect(() => {
-        if (!ref.current || message.userId === session?.userdata.id || message.status !== 'new') return;
+        if (!messageRef.current || message.userId === session?.userdata.id || message.status !== 'new') return;
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
@@ -909,7 +911,7 @@ const ChatMessage = ({
             }
         );
 
-        observer.observe(ref.current);
+        observer.observe(messageRef.current);
 
         return () => {
             observer.disconnect();
@@ -929,13 +931,44 @@ const ChatMessage = ({
 
     //
     const [contextMenu, setContextMenu] = useState<{
-        visible: boolean;
-        x: number;
-        y: number;
-        messageId: number | null;
-    }>({ visible: false, x: 0, y: 0, messageId: null });
+        visible: boolean,
+        x: number,
+        y: number,
+        messageId: number | null,
+        ready: boolean
+    }>({ visible: false, x: 0, y: 0, messageId: null, ready: false });
 
     useEffect(() => {
+        if (!contextMenu.visible || !menuRef.current || !chatContainerRef.current) return;
+
+        const menu = menuRef.current.getBoundingClientRect();
+        const container = chatContainerRef.current.getBoundingClientRect();
+
+        let posX = contextMenu.x;
+        let posY = contextMenu.y;
+
+        if (posX + menu.width > container.right) {
+            posX = posX - menu.width;
+        }
+
+        if (posX < container.left) {
+            posX = container.left;
+        }
+
+        if (posY + menu.height > container.bottom) {
+            posY = posY - menu.height;
+        }
+
+        if (posY < container.top) {
+            posY = container.top;
+        }
+
+        setContextMenu((prev) => ({
+            ...prev,
+            x: posX,
+            y: posY,
+            ready: true,
+        }));
 
         const handleCloseMenu = () => {
             if (contextMenu.visible) setContextMenu(prev => ({ ...prev, visible: false }));
@@ -956,33 +989,15 @@ const ChatMessage = ({
     }, [contextMenu.visible]);
 
     const handleContextMenu = (e: React.MouseEvent, messageId: number) => {
-        e.preventDefault();
-
-        if (!chatContainerRef?.current) return;
-        if (message.messageType !== 'user') return;
-
-        const containerRect = chatContainerRef.current.getBoundingClientRect();
-        const menuWidth = 200;
-        const maxX = containerRect.right - 250;
-        const maxY = containerRect.bottom - 200;
-
-        const isLeftSide = e.clientX < containerRect.left + containerRect.width / 2;
-
-        let x;
-        if (isLeftSide) {
-            x = Math.min(e.clientX, maxX);
-        } else {
-            x = Math.max(e.clientX - menuWidth, containerRect.left);
-        }
-
-        const y = Math.min(e.clientY, maxY);
+        e.preventDefault()
 
         setContextMenu({
+            messageId: messageId,
+            x: e.clientX,
+            y: e.clientY,
             visible: true,
-            x,
-            y,
-            messageId
-        });
+            ready: false
+        })
     };
 
 
@@ -1003,7 +1018,7 @@ const ChatMessage = ({
                     if (message.messageType === 'user') setReplyMessage(message)
                 }}
                 onContextMenu={(e) => handleContextMenu(e, message.id)}
-                ref={ref}
+                ref={messageRef}
                 key={message.createdAt}
                 id={`message-${message?.createdAt}`}
                 className={`chat-main__message `
@@ -1097,10 +1112,15 @@ const ChatMessage = ({
                 <div
                     className="message__context-menu"
                     style={{
+                        zIndex: 1000,
                         left: `${contextMenu.x}px`,
                         top: `${contextMenu.y}px`,
+                        opacity: contextMenu.ready ? 1 : 0,
+                        pointerEvents: contextMenu.ready ? "auto" : "none",
+                        transition: "opacity 0.3s ease-out",
                     }}
                     onClick={(e) => e.stopPropagation()}
+                    ref={menuRef}
                 >
                     <button
                         className="context-menu__item"
@@ -1166,23 +1186,27 @@ const ChatMessage = ({
                         </div>
                         Copy
                     </button>
-                    <button
-                        className="context-menu__item"
-                        onClick={() => handleMenuAction('delete')}
-                    >
-                        <div className="context-menu__icon">
-                            <svg
-                                id="Layer_1"
-                                data-name="Layer 1"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 110.61 122.88"
-                            >
-                                <title>trash</title>
-                                <path d="M39.27,58.64a4.74,4.74,0,1,1,9.47,0V93.72a4.74,4.74,0,1,1-9.47,0V58.64Zm63.6-19.86L98,103a22.29,22.29,0,0,1-6.33,14.1,19.41,19.41,0,0,1-13.88,5.78h-45a19.4,19.4,0,0,1-13.86-5.78l0,0A22.31,22.31,0,0,1,12.59,103L7.74,38.78H0V25c0-3.32,1.63-4.58,4.84-4.58H27.58V10.79A10.82,10.82,0,0,1,38.37,0H72.24A10.82,10.82,0,0,1,83,10.79v9.62h23.35a6.19,6.19,0,0,1,1,.06A3.86,3.86,0,0,1,110.59,24c0,.2,0,.38,0,.57V38.78Zm-9.5.17H17.24L22,102.3a12.82,12.82,0,0,0,3.57,8.1l0,0a10,10,0,0,0,7.19,3h45a10.06,10.06,0,0,0,7.19-3,12.8,12.8,0,0,0,3.59-8.1L93.37,39ZM71,20.41V12.05H39.64v8.36ZM61.87,58.64a4.74,4.74,0,1,1,9.47,0V93.72a4.74,4.74,0,1,1-9.47,0V58.64Z" />
-                            </svg>
-                        </div>
-                        Delete
-                    </button>
+                    {message.userId === session?.userdata.id &&
+
+
+                        <button
+                            className="context-menu__item"
+                            onClick={() => handleMenuAction('delete')}
+                        >
+                            <div className="context-menu__icon">
+                                <svg
+                                    id="Layer_1"
+                                    data-name="Layer 1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 110.61 122.88"
+                                >
+                                    <title>trash</title>
+                                    <path d="M39.27,58.64a4.74,4.74,0,1,1,9.47,0V93.72a4.74,4.74,0,1,1-9.47,0V58.64Zm63.6-19.86L98,103a22.29,22.29,0,0,1-6.33,14.1,19.41,19.41,0,0,1-13.88,5.78h-45a19.4,19.4,0,0,1-13.86-5.78l0,0A22.31,22.31,0,0,1,12.59,103L7.74,38.78H0V25c0-3.32,1.63-4.58,4.84-4.58H27.58V10.79A10.82,10.82,0,0,1,38.37,0H72.24A10.82,10.82,0,0,1,83,10.79v9.62h23.35a6.19,6.19,0,0,1,1,.06A3.86,3.86,0,0,1,110.59,24c0,.2,0,.38,0,.57V38.78Zm-9.5.17H17.24L22,102.3a12.82,12.82,0,0,0,3.57,8.1l0,0a10,10,0,0,0,7.19,3h45a10.06,10.06,0,0,0,7.19-3,12.8,12.8,0,0,0,3.59-8.1L93.37,39ZM71,20.41V12.05H39.64v8.36ZM61.87,58.64a4.74,4.74,0,1,1,9.47,0V93.72a4.74,4.74,0,1,1-9.47,0V58.64Z" />
+                                </svg>
+                            </div>
+                            Delete
+                        </button>
+                    }
                 </div>
             )}
         </>
