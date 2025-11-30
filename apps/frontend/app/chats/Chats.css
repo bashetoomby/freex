@@ -293,24 +293,19 @@
     position: relative;
 }
 
-.scroll-btn-wrapper {
-    position: sticky;
-    bottom: 60px;
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 30px;
-    pointer-events: none;
-}
+
 
 .chat-main__scroll-btn {
-    opacity: 0;
+    opacity: 1;
     transition: all .3s;
     background-color: var(--darkbg);
     border-radius: 50%;
     border: 1px solid var(--additional);
     width: 50px;
     height: 50px;
-    
+    position: absolute;
+    right: 30px;
+    bottom: 0;
 }
 
 .scroll-btn--visible {

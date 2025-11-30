@@ -669,35 +669,32 @@ const Chats = () => {
                                 />
                             })}
                             <div ref={messagesEndRef} />
-                            <div className="scroll-btn-wrapper">
-
-                                <button
-                                    className={`chat-main__scroll-btn ${showScrollBtn && 'scroll-btn--visible'}`}
-                                    onClick={() => {
-                                        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-                                    }}
-                                >
-                                    {(() => {
-                                        const unreadCount = activeChat.messages.reduce((count, message) =>
-                                            (message.status === 'new' && message.recipientId === session?.userdata.id) ? count + 1 : count,
-                                            0
-                                        );
-                                        if (unreadCount > 99) return <span className="chat-main__unread-q">{'99+'}</span>
-                                        return unreadCount > 0 ? <span className="chat-main__unread-q">{unreadCount}</span> : null;
-                                    })()}
-                                    <svg
-                                        x="0px"
-                                        y="0px"
-                                        width="122.88px"
-                                        height="80.593px"
-                                        viewBox="0 0 122.88 80.593"
-                                        xmlSpace="preserve"
-                                    >
-                                        <path d="M122.88 0L122.88 30.82 61.44 80.593 0 30.82 0 0 61.44 49.772 122.88 0z" />
-                                    </svg>
-                                </button>
-                            </div>
                         </div>
+                            <button
+                                className={`chat-main__scroll-btn ${showScrollBtn && 'scroll-btn--visible'}`}
+                                onClick={() => {
+                                    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+                                }}
+                            >
+                                {(() => {
+                                    const unreadCount = activeChat.messages.reduce((count, message) =>
+                                        (message.status === 'new' && message.recipientId === session?.userdata.id) ? count + 1 : count,
+                                        0
+                                    );
+                                    if (unreadCount > 99) return <span className="chat-main__unread-q">{'99+'}</span>
+                                    return unreadCount > 0 ? <span className="chat-main__unread-q">{unreadCount}</span> : null;
+                                })()}
+                                <svg
+                                    x="0px"
+                                    y="0px"
+                                    width="122.88px"
+                                    height="80.593px"
+                                    viewBox="0 0 122.88 80.593"
+                                    xmlSpace="preserve"
+                                >
+                                    <path d="M122.88 0L122.88 30.82 61.44 80.593 0 30.82 0 0 61.44 49.772 122.88 0z" />
+                                </svg>
+                            </button>
 
 
                         {
