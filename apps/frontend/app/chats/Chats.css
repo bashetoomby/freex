@@ -263,7 +263,7 @@
 .chat-main__name {
     font-size: 24px;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    word-break: break-all;
+    overflow-wrap: break-word;
     text-overflow: clip;
     overflow: hidden;
 }
@@ -530,7 +530,7 @@
     max-width: 320px;
     min-width: 80px;
     text-align: left;
-    word-break: break-all;
+    overflow-wrap: break-word;
     color: var(--foreground);
     transition: all .5s;
     border: 1px solid var(--lightbg);
