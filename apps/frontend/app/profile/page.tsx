@@ -310,7 +310,7 @@ const Profile = () => {
                                         setNotification(null)
                                     }
                                     await refreshToken()
-                                    router.refresh()
+
                                 }
                             }
                         }, () => { }, {
@@ -695,7 +695,6 @@ const Input = (
                                 setNotification(null)
                             }
                             await refreshToken()
-                            router.refresh()
                         }
                     }, () => { }, { [inputLabel]: inputValue })
 
