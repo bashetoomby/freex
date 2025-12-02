@@ -111,15 +111,7 @@ const Profile = () => {
                             let coord = latitude + ' ' + longitude
                             setIsLoadingGeo(true)
                             await requestWrapper(setUserDataRequest, async (res) => {
-                                const { fullfield } = await res.json()
-                                if (session && !session.userdata.fullfield && fullfield) {
-                                    if (notification?.message === 'To continue, please fill in all required fields.') {
-                                        setNotification(null)
-                                    }
-                                    await refreshToken()
-                                    // router.refresh()
-                                }
-                                setIsSavedGeo(true)
+                                if (res.status === 200) setIsSavedGeo(true)
                             }, () => { }, { location: coord })
                             setIsLoadingGeo(false)
 
@@ -318,6 +310,7 @@ const Profile = () => {
                                         setNotification(null)
                                     }
                                     await refreshToken()
+                                    router.refresh()
                                 }
                             }
                         }, () => { }, {
@@ -670,6 +663,7 @@ const Input = (
     const [isUploading, setIsUploading] = useState(false)
     const [isSaved, setIsSaved] = useState(false)
     const session = useSession()
+    const router = useRouter()
 
     const { notification, setNotification } = useNotifications()
     useEffect(() => {
@@ -701,7 +695,7 @@ const Input = (
                                 setNotification(null)
                             }
                             await refreshToken()
-                            // router.refresh()
+                            router.refresh()
                         }
                     }, () => { }, { [inputLabel]: inputValue })
 
